@@ -1,0 +1,121 @@
+<section class="content-main">
+  <div class="content-header">
+    <h2 class="content-title">Users</h2>
+  </div>
+  <div class="card mb-4">
+    <!-- card-header end -->
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover" id="productsTable">
+          <thead>
+            <tr>
+              <th>UserName</th>
+              <th>Email</th>
+              <th>Mobileno</th>
+              <th>Status</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(user=> { %>
+            <tr>
+              <td><%=user.name%></td>
+              <td><%=user.email%></td>
+              <td><%=user.phone%></td>
+              <td>
+                <% if ( user.status ) { %>
+                <span class="badge rounded-pill alert-success">Active</span>
+                <% } else { %>
+                <span class="badge rounded-pill alert-danger">Inactive</span>
+                <% } %>
+              </td>
+              <td class="text-end">
+                <% if ( user.status ) { %>
+                <a href="#" onclick="blockUser('<%=user._id%>','<%=user.name%>'); event.preventDefault();" class="btn btn-danger rounded ">Block</a>
+                <% } else { %>
+                <a href="#" onclick="unblockUser('<%=user._id%>','<%=user.name%>'); event.preventDefault();" class="btn btn-sm btn-brand rounded font-sm mt-15">Unblock</a>
+                <% } %>
+              </td>
+            </tr>
+            <% } )%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination-area mt-15 mb-50 ">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <% if (currentPage > 1) { %>
+        <li class="page-item"><a class="page-link" href="?page=<%=currentPage-1%>"><i class="material-icons md-chevron_left"></i></a></li>
+        <% } %>
+        <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <% if (i === currentPage) { %>active<% } %>"><a class="page-link" href="?page=<%=i%>"><%=i%></a></li>
+        <% } %>
+        <% if (currentPage < totalPages) { %>
+        <li class="page-item"><a class="page-link" href="?page=<%=currentPage+1%>"><i class="material-icons md-chevron_right"></i></a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+<script>
+
+function blockUser(id, username) {
+  Swal.fire({
+    title: "Block User",
+    text: `Do you want to block ${username}?`,
+    showCancelButton: true,
+    confirmButtonText: "Block",
+    cancelButtonText: "Cancel",
+    timer: 5000
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `/admin/block-user/${id}`,
+        method: "get",
+        success: (response) => {
+          location.reload();
+          console.log("User blocked successfully");
+        },
+        error: (error) => {
+          console.log(`Error: ${error}`);
+        },
+      });
+    }
+  });
+}
+
+  function unblockUser(id, username) {
+  Swal.fire({
+    title: "Unblock User",
+    text: `Do you want to unblock ${username}?`,
+    showCancelButton: true,
+    confirmButtonText: "Unblock",
+    cancelButtonText: "Cancel",
+    timer: 5000
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `/admin/unblock-user/${id}`,
+        method: "get",
+        success: (response) => {
+          location.reload();
+          console.log("User Unblocked");
+        },
+        error: (error) => {
+          console.log(`Error: ${error}`);
+        },
+      });
+    }
+  });
+}
+
+
+</script>

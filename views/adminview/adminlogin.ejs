@@ -1,0 +1,76 @@
+<section class="loginP vh-100">
+    <div class="container py-5 h-100 ">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card" style=" background-color: slategray">
+                    <div class="card-body p-5 text-center justify-content-start">
+
+                        <h1 class="mb-4 text-light" style="font-family: fantasy;">ADMIN LOGIN</h1>
+                        
+                            <p class="text-center" style="color: rgb(180, 17, 17)">
+                             
+                            </p>
+                        <form action="/admin/login" method="post">
+
+                            <div class="form-outline mb-4">
+                                <input type="email" id="typeEmailX-2" onkeyup="validateEmail()" class="form-control form-control-lg"
+                                    placeholder="Email" name="email" style="border-radius: 1rem;"/>
+                                    <span id="email-error" class="validation" style="color: red;"></span>
+                            </div>
+
+                            <div class="form-outline mb-1">
+                                <input type="password" id="typePasswordX-2" onkeyup="validatePassword()" class="form-control form-control-lg"
+                                    placeholder="Password" name="password" style="border-radius: 1rem;"/>
+                                    <span id="password-error" class="validation" style="color: red;"></span>
+                            </div>
+                           
+                           
+                            <div id="submit-error">
+                            <button class="btn btn-success mb-3 mt-3" type="submit" onclick="return validateForm()">Login</button>
+                        </div>
+                       
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> 
+
+
+<script>
+
+    
+
+    var emailError = document.getElementById('email-error');
+ 
+    function validateEmail() {
+        var email = document.getElementById('typeEmailX-2').value;
+        if (email.length == 0) {
+            emailError.innerHTML = 'Email is required';
+            return false;
+        }
+        if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            emailError.innerHTML = 'Email Invalid';
+            return false;
+        }
+        emailError.innerHTML = '';
+        return true;
+    }
+
+    function validateForm() {
+        if (!validateEmail()) {
+            submitError.style.display = 'flex';
+            submitError.style.justifyContent = 'center';
+            submitError.innerHTML = 'something went to wrong';
+            setTimeout(() => {
+                submitError.style.display = 'none';
+            }, 3000);
+            return false;
+        }
+    }
+</script>
+
+
+

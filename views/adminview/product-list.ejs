@@ -1,0 +1,221 @@
+
+<section class="content-main">
+  <div class="justify-content-between d-flex">
+    <div>
+        <h2 class="content-title">Products</h2>
+    </div>
+    <div>
+        <a href="/admin/add-product" class="btn btn-primary btn-sm"><i class=""></i>Add Product</a>
+    </div>
+  </div>  
+    <div class="content-header">
+        <form action="/admin/view-products" method="post" enctype="multipart/form-data">
+    </div>
+  
+    <!-- <div class="card mb-4">
+        <div class="card-body  ">
+            <% products.forEach(product=> { %>
+                <article class="itemlist">
+                    <div class="row align-items-center">
+                        <div class="col col-check flex-grow-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+                            <a class="itemside" href="#">
+                                <div class="left">
+                                    <img src="product-images/<%=product._id%>.jpg" class="img-sm img-thumbnail"
+                                        alt="Item">
+                                </div>
+                                <div class="info">
+                                    <h6 class="mb-0">
+                                        <%=product.name%>
+                                    </h6>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-1 col-sm-2 col-4 col-date">
+                            <span>
+                                <%=product.category%>
+                            </span>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>
+                                <%=product.price%>
+                            </span> </div>
+                        <div class="col-lg-2 col-sm-2 col-4 col-status">
+                            <span class="badge rounded-pill alert-success">
+                                <%=product.description%>
+                            </span>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-4 col-action text-end d-flex">
+                            <a href="/admin/edit-products/<%=product._id%>"
+                                class="btn btn-sm font-sm rounded btn-brand">
+                                <i class="material-icons md-edit"></i> Edit
+                            </a>
+
+                            <a href="#" class="btn btn-sm font-sm btn-danger rounded">
+                                <i class="material-icons md-delete_forever"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <% } )%>
+        </div>
+
+
+    </div> -->
+    <div class="card mb-4"> 
+        <!-- card-header end -->
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover" id="productsTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Description</th>
+                  <th>Image</th>
+                  <th>Update</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <% products.forEach((pro)=> { %>
+
+                  <tr>
+                    <td><%=pro.name%> </td>
+                    <td><%=pro.category%></td>
+                    <td><%=pro.price%></td>
+                    <td><%=pro.description%></td>
+                    <td>
+                      <img src="<%=pro.image[0]%>" alt="" srcset="" style="height: 60px; width: 60px;">
+  
+                    </td>
+                    <td>
+                      <a  class="btn btn-brand rounded font-sm " href="/admin/edit-product/<%=pro._id%>">Edit</a>
+                      
+                      <% if ( pro.status ) { %>
+
+                        <a href="#" onclick="unlistProduct('<%=pro._id%>'); event.preventDefault();" class="btn btn-danger rounded font-sm">Unlist</a>
+
+                      <% } else { %>
+
+                        <a href="#" onclick="listProduct('<%=pro._id%>'); event.preventDefault();" class="btn btn-brand rounded font-sm">List</a>
+
+                      <% } %>
+
+                    </td>
+                  
+                  </tr>
+                 
+                  <% }) %>
+                  
+
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+
+    <!-- <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                <li class="page-item"><a class="page-link" href="#">02</a></li>
+                <li class="page-item"><a class="page-link" href="#">03</a></li>
+                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">16</a></li>
+                <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+        </form>
+    </div> -->
+
+    <div class="pagination-area mt-15 mb-50 ">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <% if (currentPage > 1) { %>
+          <li class="page-item"><a class="page-link" href="?page=<%=currentPage-1%>"><i class="material-icons md-chevron_left"></i></a></li>
+          <% } %>
+          <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <% if (i === currentPage) { %>active<% } %>"><a class="page-link" href="?page=<%=i%>"><%=i%></a></li>
+          <% } %>
+          <% if (currentPage < totalPages) { %>
+          <li class="page-item"><a class="page-link" href="?page=<%=currentPage+1%>"><i class="material-icons md-chevron_right"></i></a></li>
+          <% } %>
+        </ul>
+      </nav>
+    </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready( function () {
+      $('#productsTable').DataTable();
+  } );
+</script>
+
+<script>
+
+  function unlistProduct(id) {
+    Swal.fire({
+      title: "Unlist Product",
+      text: `Do you want to unlist this product?`,
+      showCancelButton: true,
+      confirmButtonText: "Unlist",
+      cancelButtonText: "Cancel",
+      timer: 5000
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `/admin/block-product/${id}`,
+          method: "get",
+          success: (response) => {
+            location.reload();
+            console.log(" Product Unlisted");
+          },
+          error: (error) => {
+            console.log(`Error: ${error}`);
+          },
+        });
+      }
+    });
+  }
+  
+    function listProduct(id) {
+    Swal.fire({
+      title: "List Product",
+      text: `Do you want to list this product?`,
+      showCancelButton: true,
+      confirmButtonText: "List",
+      cancelButtonText: "Cancel",
+      timer: 5000
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `/admin/unblock-product/${id}`,
+          method: "get",
+          success: (response) => {
+            location.reload();
+            console.log("Product Listed");
+          },
+          error: (error) => {
+            console.log(`Error: ${error}`);
+          },
+        });
+      }
+    });
+  } 
+  
+  
+  </script>

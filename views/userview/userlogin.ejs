@@ -1,0 +1,155 @@
+<!-- <section class="loginP vh-100">
+    <div class="container py-5 h-100 ">
+        <div class="row d-flex justify-content-end align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card" style="border-radius: 3rem;">
+                    <div class="card-body p-5 text-center justify-content-start">
+
+                        <h1 class="mb-4 text-dark" style="font-family: fantasy; ">User Login</h1>
+                        
+                            <p class="text-center" style="color: rgb(180, 17, 17)">
+                             
+                            </p>
+                        <form action="/login" method="post">
+
+                            <div class="form-outline mb-4">
+                                <input type="email" id="typeEmailX-2" onkeyup="validateEmail()" class="form-control form-control-lg"
+                                    placeholder="Email" name="email" style="border-radius: 1rem;"/>
+                                    <span id="email-error" class="validation" style="color: red;"></span>
+                            </div>
+
+                            <div class="form-outline mb-1">
+                                <input type="password" id="typePasswordX-2" onkeyup="validatePassword()" class="form-control form-control-lg"
+                                    placeholder="Password" name="password" style="border-radius: 1rem;"/>
+                                    <span id="password-error" class="validation" style="color: red;"></span>
+                            </div>
+                            <div class="mb-4">
+                                <a href="/signup" style="text-decoration: none;">ForgotPassword?</a>
+                            </div>
+                            
+                            <div id="submit-error">
+                            <button class="btn btn-success mb-3" type="submit" onclick="return validateForm()">Login</button>
+                            <a class="btn btn-primary mb-3" href="/signup" type="submit">Sign Up</a>
+                        </div>
+                        <p class="mb-2" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: medium;">Or</p>
+                        <div class="form-check d-flex justify-content-center mb-3">
+                            <label class="form-check-label text-dark" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: medium;" for="form2Example3">
+                                <a href="/signup" style="text-decoration: none;">Login with OTP</a>
+                            </label>
+                        </div>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  -->
+
+<section class="vh-100 ">
+    <br>
+    <br>
+    <div class="container py-5 h-100" >
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-10 col-lg-5">
+          <div class="card"">
+            <div class="row g-0">
+              <div class="col-md-6 col-lg-5 d-none d-md-block">
+                <img src="userAssets/images/kkk.jpg"
+                  alt="login form" class="img-fluid" style="height: 100%; width: 100%;" />
+              </div>
+             
+              <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                <div class="card-body p-4 p-lg-5 text-black">
+  
+                  <form action="/login" method="post">
+                    <!-- <div>
+                        <a style="font-family: Arial, Helvetica, sans-serif;" href="/">Home</a>
+                      </div> -->
+
+                      <h1 class="mb-4 text-dark" style="font-family: fantasy; ">User Login</h1>
+
+                    <div>
+                        <h6 class=" text-center mb-4" >Login Using OTP <a href="/otplogin"
+                            style="color: #0059ff;">Click Here</a></h6>
+                            <h6 class="text-center mb-4 mt-3">Or</h6>
+
+                    </div>
+                    <div class="form-outline mb-4">
+                        <input type="email" id="typeEmailX-2"  class="form-control form-control-lg"
+                        placeholder="Email" name="email" style="border-radius: 1rem;"/>
+                        <span id="email-error" class="validation" style="color: red;"></span>
+                    </div>
+  
+                    <div class="form-outline mb-4">
+                        <input type="password" id="typePasswordX-2"  class="form-control form-control-lg"
+                        placeholder="Password" name="password" style="border-radius: 1rem;"/>
+                        <span id="password-error" class="validation" style="color: red;"></span>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-success mb-3" type="submit" onclick="return validateForm()">Login</button>
+                        <span id="submit-error" class="validation" style="color: red;"></span>
+                    </div>
+  
+                    <a class="small text-muted mt-5" href="#!">Forgot password?</a>
+                    <p class=" pb-lg-2" style="color: #000000;">Don't have an account? <a href="/signup"
+                        style="color: #0477fa;">Register here</a></p>
+                  </form>
+  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<script>
+
+    var emailError = document.getElementById('email-error');
+    var passwordError = document.getElementById('password-error');
+    var submitError = document.getElementById('submit-error');
+
+    function validateEmail() {
+        var email = document.getElementById('typeEmailX-2').value;
+        if (email.length == 0) {
+            emailError.innerHTML = 'Email is required';
+            return false;
+        }
+        if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            emailError.innerHTML = 'Email Invalid';
+            return false;
+        }
+        emailError.innerHTML = '';
+        return true;
+    }
+
+    function validatePassword() {
+        var password = document.getElementById('typePasswordX-2').value;
+        var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+        if (password.match(passChecker)) {
+            passwordError.innerHTML = '';
+            return true;
+        } else {
+            passwordError.innerHTML = 'Invalid Password';
+            return false;
+        }
+    }
+    
+    function validateForm() {
+        if (!validateEmail() || !validatePassword()) {
+            submitError.style.display = 'flex';
+            submitError.style.justifyContent = 'center';
+            submitError.innerHTML = 'something went to wrong';
+            setTimeout(() => {
+                submitError.style.display = 'none';
+            }, 3000);
+            return false;
+        }
+    }
+</script>
+
+
+

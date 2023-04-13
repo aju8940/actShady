@@ -1,0 +1,158 @@
+
+<section class="vh-100 ">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col col-xl-10">
+            <div class="card" style="border-radius: 0rem;">
+              <div class="row g-0">
+                <div class="col-md-6 col-lg-5 d-none d-md-block">
+                  <img src="userAssets/images/signup.jpg"
+                    alt="login form" class="img-fluid" style="border-radius: 0rem 0 0 0rem; height: 100%; width: 100%;" />
+                </div>
+                <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                  <div class="card-body p-4 p-lg-5 text-black">
+    
+                    <form action="/signup" method="post">
+                      <div class="d-flex align-items-center mb-3 pb-1">
+                        <!-- <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i> -->
+                        <span class="h1 fw-bold mt-0">Sign Up</span>
+                      </div>
+  
+                      <div class="form-outline mb-4">
+                        <input type="text" id="typeUsernameX-2"  class="form-control form-control-md" placeholder="Name"
+                  name="name" style="border-radius: 1rem; width: 70%;" />
+                <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                    </div>
+
+                      <div class="form-outline mb-4">
+                        <input type="email" id="typeEmailX-2" class="form-control form-control-md" placeholder="Email"
+                        name="email" style="border-radius: 1rem; width: 70%;" />
+                      <span id="email-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                      </div>
+    
+                      <div class="form-outline mb-4">
+                        <input type="tel" id="typeNumberX-2" class="form-control form-control-md" placeholder="Phone Number"
+                        name="phone" style="border-radius: 1rem; width: 70%;" />
+                      <span id="number-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input type="password" id="typePasswordX-2" class="form-control form-control-md" placeholder="Password"
+                  name="password" style="border-radius: 1rem; width: 70%;" />
+                <span id="password-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input type="password" id="typeConfirmPassword" class="form-control form-control-md"
+                  placeholder="Confirm Password" style="border-radius: 1rem; width: 70%;" />
+                <span id="confirm-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                      </div>
+  
+                      <div class="mb-4">
+                          <button class="btn btn-primary mb-3" type="submit" onclick="return validateForm()">Signup</button>
+                          <span style="color: red;" id="submit-error"></span>
+                      </div>
+    
+                      <p class="mt-3" style="color: #000000;">Already have an account? <a href="/login"
+                          style="color: #0077ff;">Login</a></p>
+                    </form>
+    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>  
+  
+    <script>
+      const nameError = document.getElementById("name-error");
+      const emailError = document.getElementById("email-error");
+      const passwordError = document.getElementById("password-error");
+      const submitError = document.getElementById("submit-error");
+      const numberError = document.getElementById("number-error")
+      const confirmError = document.getElementById('confirm-error')
+  
+      function validateName() {
+        var name = document.getElementById("typeUsernameX-2").value;
+        if (name.length == 0) {
+          nameError.innerHTML = "Name is required";
+          return false;
+        }
+        if (!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
+          nameError.innerHTML = "Write full name";
+          return false;
+        }
+        nameError.innerHTML = "";
+        return true;
+      }
+  
+      function validateEmail() {
+        var email = document.getElementById("typeEmailX-2").value;
+        if (email.length == 0) {
+          emailError.innerHTML = "Email is required";
+          return false;
+        }
+        if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+          emailError.innerHTML = "Email invalid";
+          return false;
+        }
+        emailError.innerHTML = "";
+        return true;
+      }
+  
+      function validatePassword() {
+        var password = document.getElementById("typePasswordX-2").value;
+        if (password.length == 0) {
+          passwordError.innerHTML = "Password must contain 6 characters";
+          return false;
+        }
+        var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+        if (password.match(passChecker)) {
+          passwordError.innerHTML = "";
+          return true;
+        } else {
+          passwordError.innerHTML = "";
+          return false;
+        }
+      }
+  
+      function validateConfirmPassword(){
+        let password = document.getElementById('typePasswordX-2').value
+        let confirmPassword = document.getElementById('typeConfirmPassword').value
+        if (password != confirmPassword){
+          confirmError.innerText = "Password doesnt match"
+        }else{
+          return true
+        }
+      }
+  
+      function validatePhonenumber(){
+        const mobileValue = document.getElementById("typeNumberX-2").value;
+        if (mobileValue == "") {
+            numberError.innerText = "This field is required";
+            return false;
+          } else if (!mobileValue.match(/^(\+91|0)?[6-9]\d{9}$/)) {
+            numberError.innerText = "Enter a valid mobile number";
+            return false;
+          }
+          // The mobile number is valid
+          numberError.innerText = "";
+          return true;
+      }
+  
+      function validateForm() {
+        if (!validateName() || !validateEmail() || !validatePassword()) {
+          submitError.style.display = "flex";
+          submitError.style.justifyContent = "center";
+          submitError.innerHTML = "Please enter the details";
+          setTimeout(() => {
+            submitError.style.display = "none";
+          }, 3000);
+          return false;
+        }
+      }
+    </script>
+  
+  
