@@ -44,6 +44,8 @@
     </div>
   </div>
 
+ 
+
   <div class="pagination-area mt-15 mb-50 ">
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
@@ -59,11 +61,21 @@
       </ul>
     </nav>
   </div>
+
+
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+  
+
+  <script>
+    $(document).ready( function () {
+      $('#productsTable').DataTable();
+  } );
+  </script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
 
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
 
 <script>
 
@@ -116,6 +128,8 @@ function blockUser(id, username) {
     }
   });
 }
+
+
 
 
 </script>

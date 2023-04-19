@@ -29,6 +29,8 @@ router.get('/product-details/:id',usercontroller.productDetails)
 
 router.get('/shopping-cart',middlewares.verifyLogin,usercontroller.viewShoppingCart)
 
+router.get('/empty-cart',middlewares.verifyLogin,usercontroller.emptyCart)
+
 router.get('/add-to-cart/:id',middlewares.verifyLogin,usercontroller.addToCArt)
 
 router.post('/change-product-quantity',middlewares.verifyLogin,usercontroller.changeProQuantity)
@@ -36,5 +38,17 @@ router.post('/change-product-quantity',middlewares.verifyLogin,usercontroller.ch
 router.post('/remove-product',middlewares.verifyLogin,usercontroller.removeCartProduct);
 
 router.get('/checkout-page',middlewares.verifyLogin,usercontroller.checkOut)
+
+router.post('/add-address',middlewares.verifyLogin,usercontroller.addAddressPost);
+
+router.post('/place-order',middlewares.verifyLogin,usercontroller.placeOrderPost)
+
+router.get('/orders',middlewares.verifyLogin,usercontroller.getOrders)
+
+router.get('/order-product-detail/:id',middlewares.verifyLogin,usercontroller.getOrderedPro)
+
+router.get('/return-order/:id',middlewares.verifyLogin,usercontroller.returnOrder)
+
+router.get('/cancel-order/:id',middlewares.verifyLogin,usercontroller.cancelOrder)
 
 module.exports = router;

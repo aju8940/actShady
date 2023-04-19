@@ -67,7 +67,6 @@ module.exports={
 
     blockUser: (userId)=>{
         return new Promise(async(res,rej)=>{
-            console.log('ttttttttttttttttttttttttttttttttttttttttttttttttttt');
             await db.get().collection(collection.USER).updateOne({_id:new ObjectId(userId)},{$set:{status:false}})
             .then((response)=>{
                 res(response)
@@ -229,5 +228,122 @@ module.exports={
             }
             )
         })
-    }
+    },
+
+    updateAddress: (addressData,userId)=>{
+        return new Promise((res,rej)=>{
+            addressData._id = new ObjectId()
+            db.get().collection(collection.USER).updateOne({_id: new ObjectId(userId)},
+            {
+                $push:{
+                    address:addressData
+                }
+            }).then((response)=>{
+                res(response)
+            })
+        })
+    },
+
+    findUserId: (userId)=>{
+        return new Promise(async(res,rej)=>{
+            let user = await db.get().collection(collection.USER).findOne({_id: new ObjectId(userId)})
+            res(user)
+        })
+    },
+
+    getCartList: (userId)=>{
+        return new Promise(async(res,rej)=>{
+            let cart = await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+            res(cart.products)
+        })
+    },
+
+    placeOrder: (order,products,grandTotal,payment,userId)=>{
+        return new Promise ((res,rej)=>{
+            let status = order.paymentMethod==='Cash on delivery'?'placed':'pending'
+            let orderObj = {
+                deliveryAddress:{
+                    name:order.name,
+                    address:order.housename,
+                    city:order.city,
+                    district:order.district,
+                    pincode:order.pincode,
+                    mobile:order.phone
+                },
+                userId:ObjectId(userId),
+                paymentmethod:payment,
+                products:products,
+                status:status,
+                orderstatus:'placed',
+                totalPrice:grandTotal,
+                date: new Date()
+            }
+            db.get().collection(collection.ORDERS).insertOne(orderObj)
+            db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(req.body.userId)})
+        })
+    },
+
+    getUserAddress:(userId, addressId)=>{
+        return new Promise(async(resolve, reject)=>{
+            userId = new ObjectId(userId);
+            addressId = new ObjectId(addressId);
+            const address = await db.get().collection(collection.USER)
+            .findOne(
+                {
+                    _id: userId,
+                    address: {$elemMatch: {_id: addressId}}
+                },
+                {
+                    projection: {
+                        _id: 0, 
+                        'address.$': 1
+                    }
+                }
+            )
+            resolve(address.address[0]);
+        })
+    },
+
+    getTotalAmount:(userId)=>{
+        return new Promise(async (resolve, reject) => {
+            let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
+              {
+                $match: { user: ObjectId(userId) }
+              },
+              {
+                $unwind: '$products'
+              },
+              {
+                $project: {
+                  item: '$products.item',
+                  quantity: '$products.quantity'
+                }
+              },
+              {
+                $lookup: {
+                  from: 'product',
+                  localField: 'item',
+                  foreignField: '_id',
+                  as:'product'
+                }
+              },
+  
+              {
+                  $project:{
+                      item:1,quantity:1,product:{$arrayElemAt:["$product",0]}
+                  }
+              },
+              {
+                $group:{
+                    _id:null,
+                    total:{$sum:{$multiply:['$quantity','$product.price']}}
+                }
+              }
+            ]).toArray()
+
+               resolve(total[0].total)                                                                                                                                                                                                                                                     
+          })
+    },
+
+    
 } 

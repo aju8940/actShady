@@ -168,7 +168,35 @@ module.exports={
             await productHelpers.unblockProduct(proId).then(()=>{
                 res.redirect("/admin/product-list");
             })
-    }
+    },
 
+    getOrderDetails: async(req,res)=>{
+        await productHelpers.getAllOrders().then((orders)=>{
+            res.render('adminview/order-details',{layout:"adminlayout",orders})
+        })
+        
+    },
+
+    shipProduct: async(req,res)=>{
+        let orderId = req.params.id
+        console.log(orderId);
+        await productHelpers.shipproduct(orderId).then(()=>{
+            res.redirect('/admin/order-details')
+        })
+    },
+
+    deliverProduct: async(req,res)=>{
+        let orderId = req.params.id
+        await productHelpers.deliverProduct(orderId).then(()=>{
+            res.redirect('/admin/order-details')
+        })
+    },
+
+    returnProduct: async(req,res)=>{
+        let orderId = req.params.id
+        await productHelpers.returnConfirm(orderId).then(()=>{
+            res.redirect('/admin/order-details')
+        })
+    }
       
 }

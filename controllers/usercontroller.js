@@ -36,11 +36,9 @@ otpLoginRender: (req,res)=>{
 
 sendOtp: (req,res)=>{
   req.session.mobile=req.body.phone;
-  console.log('asasdddddddsdasdllllllllllllllllllllllllllllllllllllllll');
   userHelper.findUser(req.body.phone).then(async(user)=>{
     console.log(user);
     if(user){
-      console.log('ffffffffffffffffffffffffffffffffffffffffffffffffffffff');
       req.session.user = user
       await twilio.sendOtp(req.body.phone)
       res.json(true)
@@ -125,12 +123,22 @@ productDetails: async(req,res)=>{
 },
 
 viewShoppingCart: async(req,res)=>{
+  
   let loggedIn = req.session.user
   let cartCount = await userHelper.getCartCount(req.session.user._id)
-  userHelper.getCartProducts(req.session.user._id).then((products)=>{
-  console.log(products);
-  res.render('userview/shopping-cart',{products,loggedIn,cartCount})
-  })
+    userHelper.getCartProducts(req.session.user._id).then((products)=>{
+      let grandTotal = 0
+      products.forEach(pro => {
+        pro.subtotal = pro.quantity * pro.product.price
+        grandTotal=grandTotal+pro.subtotal
+      });
+    res.render('userview/shopping-cart',{products,loggedIn,cartCount,grandTotal})
+    })
+  
+},
+
+emptyCart: (req,res)=>{
+  res.render('userview/empty-cart')
 },
 
 addToCArt: (req,res)=>{
@@ -140,21 +148,86 @@ addToCArt: (req,res)=>{
 },
 
 changeProQuantity: (req,res)=>{
-  console.log(req.body);
   userHelper.changeProductQuantity(req.body).then((response)=>{
-    res.json(response)
+    res.json({
+      response
+    })
   })
 },
 
 removeCartProduct: (req,res)=>{
-  console.log(req.body);
-  userHelper.removeProductCart(req.body).then(()=>{
+  userHelper.removeProductCart(req.body).then((response)=>{
     res.json(response)
   })
 },
 
-checkOut: (req,res)=>{
-  res.render('userview/checkout')
+checkOut: async(req,res)=>{
+  let loggedIn = req.session.user
+  const userAddress = req.session.user.address
+  let cartCount = await userHelper.getCartCount(req.session.user._id)
+  userHelper.getCartProducts(req.session.user._id).then((products)=>{
+    let grandTotal = 0
+    products.forEach(pro => {
+      pro.subtotal = pro.quantity * pro.product.price
+      grandTotal=grandTotal+pro.subtotal
+    });
+    res.render('userview/checkout',{loggedIn,cartCount,userAddress,grandTotal,products})
+  })
+
+},
+
+addAddressPost: (req,res)=>{
+  try{
+    userHelper.updateAddress(req.body,req.session.user._id)
+    userHelper.findUserId(req.session.user._id).then((user)=>{
+      req.session.user = user
+      res.render('/checkout-page')
+    })
+  } catch (error){
+    console.log(error);
+  }
+},
+
+placeOrderPost: async(req,res) => {
+  let userId = req.session.user._id;
+  const address = await userHelper.getUserAddress(userId, req.body.addressId);
+  let payment = req.body.paymentMethod
+  let products= await userHelper.getCartList(userId)
+  let grandTotal = await userHelper.getTotalAmount(userId)
+  console.log('boddddddddddddddddddddddyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',req.body);
+  userHelper.placeOrder(address,products,grandTotal,payment,userId,req.body)
+  res.redirect('/orders')      
+},
+
+getOrders: async(req,res)=>{
+  let loggedIn = req.session.user
+  let cartCount = await userHelper.getCartCount(req.session.user._id)
+  let orders = await productHelper.getOrderDetails(req.session.user._id)
+    res.render('userview/orders',{loggedIn,cartCount,orders})
+},
+
+getOrderedPro: async(req,res)=>{
+  let loggedIn = req.session.user
+  let cartCount = await userHelper.getCartCount(req.session.user._id)
+  let products = await productHelper.orderProductDetail(req.params.id)
+  let order = await productHelper.findOrder(req.params.id)
+  res.render('userview/orderedProduct',{loggedIn,cartCount,products,order})
+},
+
+returnOrder: async(req,res)=>{
+  let orderId = req.params.id
+  await productHelper.returnProduct(orderId).then(()=>{
+    res.redirect('/orders')
+  })
+},
+
+cancelOrder: async(req,res)=>{
+  let orderId = req.params.id
+  await productHelper.cancelOrder(orderId).then(()=>{
+    res.redirect('/orders')
+  })
 }
+
+
 
 }
