@@ -68,84 +68,76 @@
 
 
 							<% if ( userAddress ) { %>
-							<tr class="table_row">
-								<td>
-									<% userAddress.forEach(user=> { %>
-
-										<label class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-2 border">
-											<div class="p-3">
-												<p> <b>
-														<input type="radio" id="addressId" name="addressId"
-															for="addressId" value="<%=user._id%>"
-															class="form-check-input float-right"
-															style="accent-color: black ; width: 15px; height: 15px;"
-															checked required>
-														<label class="form-check-label" for="addressId"
-															name="user_name">
-															<%=user.name%>
-														</label>
-													</b></p>
-
-												<b class="">
-													<label class="form-check-label" name="phone" for="addressId">
-														<%=user.phone%>
-													</label>
-												</b>
-												<p>
-													<label class="form-check-label" id="addressId" name="homeAddress"
-														for="addressId">
-														<%=user.housename%> , <%=user.city%> , <%=user.district%> ,
-																	<%=user.pincode%>
-													</label>
-
-												</p>
-											</div>
-										</label>
-										<% }) %>
-
-										<% } else { %>
+								<tr class="table_row">
+									<td>
+										<% userAddress.forEach(user=> { %>
 
 											<label class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-2 border">
 												<div class="p-3">
 													<p> <b>
-															
+															<input type="radio" id="addressId" name="addressId"
+																for="addressId" value="<%=user._id%>"
+																class="form-check-input float-right"
+																style="accent-color: black ; width: 15px; height: 15px;"
+																checked required>
 															<label class="form-check-label" for="addressId"
 																name="user_name">
-																
-																	</label>
+																<%=user.name%>
+															</label>
 														</b></p>
-	
+
 													<b class="">
 														<label class="form-check-label" name="phone" for="addressId">
-															
+															<%=user.phone%>
 														</label>
 													</b>
 													<p>
-														<label class="form-check-label" id="addressId" name="homeAddress"
-															for="addressId">
-															
+														<label class="form-check-label" id="addressId"
+															name="homeAddress" for="addressId">
+															<%=user.phone%> , <%=user.city%> , <%=user.district%> ,
+																		<%=user.pincode%>
 														</label>
-	
+
 													</p>
 												</div>
 											</label>
-											<% } %>
-								</td>
-							</tr>
+											<% }) %>
+
+												<% } else { %>
+
+													<label
+														class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-2 border">
+														<div class="p-3">
+															<p> <b>
+
+																	<label class="form-check-label" for="addressId"
+																		name="user_name">
+
+																	</label>
+																</b></p>
+
+															<b class="">
+																<label class="form-check-label" name="phone"
+																	for="addressId">
+
+																</label>
+															</b>
+															<p>
+																<label class="form-check-label" id="addressId"
+																	name="homeAddress" for="addressId">
+
+																</label>
+
+															</p>
+														</div>
+													</label>
+													<% } %>
+									</td>
+								</tr>
 						</table>
 					</div>
 
-					<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-						<div class="flex-w flex-m m-r-20 m-tb-5">
-							<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"
-								name="coupon" placeholder="Coupon Code">
 
-							<div
-								class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-								Apply coupon
-							</div>
-						</div>
-					</div>
 				</div>
 				<a href="#" data-toggle="modal" data-target="#address123" class="btn btn-dark mb-4 hov-btn3 mt-4 ml-4"
 					style="border-radius: 2rem;">Add New Address</a>
@@ -207,16 +199,23 @@
 							Payments
 						</h4>
 
-						<label class="radio-inline">
+						<label class="radio-inline ">
 							<h5><input type="radio" checked required name="paymentMethod" value="Cash on delivery"
-									class="float-right">Cash on delivery</h5>
+									class="float-left mr-4 mt-1">Cash on delivery</h5>
+						</label>
+
+						<label class="radio-inline ">
+							<h5><input type="radio" required name="paymentMethod" value="Razorpay"
+									class="float-left mr-4 mt-1">Razorpay</h5>
 						</label>
 
 					</div>
+
+					<button class="btn flex-c-m stext-101 cl0 ml-5 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
+						type="submit" onclick="placeOrder() ; event.preventDefault()">Place Order</button>
 				</div>
 
-				<button class="btn flex-c-m mt-5 stext-101 cl0 ml-5 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
-					type="submit" onclick="placeOrder() ; event.preventDefault()">Place Order</button>
+
 			</div>
 
 		</div>
@@ -243,19 +242,19 @@
 					<fieldset class="p-2">
 						<div class="row">
 							<div class=" col-md-6 col-lg-6 col-xl-6 required mb-3">
-								<input type="text" id="typeUsernameX-2" class="form-control form-control-md"
+								<input type="text" id="typeUsernameX-2" required class="form-control form-control-md"
 									placeholder="Name" name="name" style="border-radius: 1rem; width: 70%;" />
 							</div>
 
 							<div class=" col-md-6 col-lg-6 col-xl-6 required mb-3">
-								<input type="tel" id="typeUsernameX-2" class="form-control form-control-md"
+								<input type="tel" id="typeUsernameX-2" required class="form-control form-control-md"
 									placeholder="Phonenumber" name="phone" style="border-radius: 1rem; width: 70%;" />
 							</div>
 						</div>
 						<div class="row d-flex">
 
 							<div class=" col-md-6 col-lg-6 col-xl-6 required mb-3">
-								<input type="text" id="typeUsernameX-2" class="form-control form-control-md"
+								<input type="text" id="typeUsernameX-2" required class="form-control form-control-md"
 									placeholder="City" name="city" style="border-radius: 1rem; width: 70%;" />
 							</div>
 
@@ -270,29 +269,13 @@
 						<div class="row">
 
 							<div class=" col-md-6 col-lg-6 col-xl-6 required mb-3">
-								<input type="number" id="typeUsernameX-2" class="form-control form-control-md"
+								<input type="number" id="typeUsernameX-2" required class="form-control form-control-md"
 									placeholder="Pincode" name="pincode" style="border-radius: 1rem; width: 70%;" />
 							</div>
 
-							<div class=" col-md-6 col-lg-6 col-xl-6 required">
-								<select name="district" id="input-country" style="border-radius: 1rem; width: 70%;">
-									<option value=""> --- District --- </option>
-									<option>Kasarkod</option>
-									<option>Kannur</option>
-									<option>Calicut</option>
-									<option>Wayanad</option>
-									<option>Malappuram</option>
-									<option>Palakkad</option>
-									<option>Thrissur</option>
-									<option>Ernakulam</option>
-									<option>Idukki</option>
-									<option>Kottayam</option>
-									<option>Alappuzha</option>
-									<option>Pathanamthitta</option>
-									<option>Kollam</option>
-									<option>Trivandram</option>
-
-								</select>
+							<div class=" col-md-6 col-lg-6 col-xl-6 required mb-3">
+								<input type="text" required class="form-control form-control-md"
+									placeholder="District" name="district" style="border-radius: 1rem; width: 70%;" />
 							</div>
 						</div>
 						<div class="row">
@@ -319,17 +302,71 @@
 			'Order Placed Successfull',
 			'success'
 		).then(() => {
-			
-				$.ajax({
-					url: '/place-order',
-					data: $('#checkout-form').serialize(),
-					method: 'post',
-					success: (response) => {
-						window.location.href='/shop'
+
+			$.ajax({
+				url: '/place-order',
+				data: $('#checkout-form').serialize(),
+				method: 'post',
+				success: (response) => {
+					if (response.codSuccess) {
+						console.log(response);
+						window.location.href = '/orders'
+					} else {
+						razorpayPayment(response)
 					}
-				})
-			
+				}
+			})
+
 		})
 	}
+
+	function razorpayPayment(order) {
+		var options = {
+			"key": "rzp_test_FN9OHxJLyD7IWz", // Enter the Key ID generated from the Dashboard
+			"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+			"currency": "INR",
+			"name": "Act Shady",
+			"description": "Test Transaction",
+			"image": "https://example.com/your_logo",
+			"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+			"handler": function (response) {
+				verifyPayment(response, order)
+			},
+			"prefill": {
+				"name": "Gaurav Kumar",
+				"email": "gaurav.kumar@example.com",
+				"contact": "9000090000"
+			},
+			"notes": {
+				"address": "Razorpay Corporate Office"
+			},
+			"theme": {
+				"color": "#3399cc"
+			}
+		};
+		var rzp1 = new Razorpay(options);
+		rzp1.open();
+	}
+
+	function verifyPayment(payment,order){
+		$.ajax({
+			url:'/verify-payment',
+			data:{
+				payment,
+				order
+			},
+			method:'post',
+			success:(response)=>{
+				if(response.status){
+					console.log("ORDER SUCCESS");
+					location.href = "/"
+				}else{
+					alert("PAYMENT FAILED")
+				}
+			}
+		})
+	}
+
+
 
 </script>

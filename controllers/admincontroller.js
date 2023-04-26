@@ -12,11 +12,16 @@ const { ObjectId } = require('mongodb');
 
 module.exports={
 
-    adminPage:(req,res)=>{
+    adminPage: async(req,res)=>{
         let admin = req.session.admin
         if(req.session.admin){
-            res.render('adminview/index',{layout:"adminlayout"})
+            let order = await productHelpers.getAllOrders()
+            let orderCount = order.length
+            let total = await adminHelpers.totalAmount()
+            console.log(total);
+            res.render('adminview/index',{orderCount,total,layout:"adminlayout"})
         }else{
+            
             res.render('adminview/adminlogin',{layout:"adLoginLayout"})
         }
     },
@@ -218,6 +223,15 @@ module.exports={
         await productHelpers.returnConfirm(orderId).then(()=>{
             res.redirect('/admin/order-details')
         })
-    }
+    },
+
+    graphStatics: async (req, res) => {
+
+            let OrderStatistics = await adminHelpers.getOrderStatistics()
+            let saleStatistics = await adminHelpers.getSaleStatistics()
+    
+            res.json({ OrderStatistics, saleStatistics })
+    
+        },
       
 }

@@ -1,1 +1,160 @@
-<h1>User Profile</h1>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:27:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>User Profile</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="user-profile-asset/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="user-profile-asset/css/main.css">
+</head>
+
+<br>
+<br>
+<br>
+<br>
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow">Home</a>
+                <span></span> Account
+            </div>
+        </div>
+    </div>
+    <section class="pt-50 pb-150">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 m-auto">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="dashboard-menu">
+                                <ul class="nav flex-column" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                    </li>
+                                    
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Add Address</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="page-login-register.html"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="tab-content dashboard-content">
+                                
+                                <div class="tab-pane active show fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                    <h5 class="mb-2">Address</h5>
+                                    <div class="row">
+                                        <% if ( userAddress ) { %>
+
+                                            <% userAddress.forEach(user=> { %>
+                                        <div class="col-lg-6 mb-3">
+                                            <div class="card mb-3 mb-lg-0">
+                                                <div class="card-body">
+                                                    <address><%=user.name%><br> <%=user.phone%>,<br> <%=user.phone%>, <br><%=user.city%>, <br><%=user.district%> ,<br>Pincode : <%=user.pincode%></address>
+                                                    <br>
+                                                    <a class="text-primary" href="/edit-address/<%=user._id%>">Edit Address</a>
+                                                </div>
+
+                                               
+                                            </div>
+                                        </div>
+
+                                        <% }) %>
+
+                                        <% } else { %>
+
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Add Address</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            
+                                            <form action="/add-address" method="post">
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label>Name <span class="required">*</span></label>
+                                                        <input required class="form-control square" name="name" type="text">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Phone Number <span class="required">*</span></label>
+                                                        <input required class="form-control square" name="phone" type="tel">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Residential Address <span class="required">*</span></label>
+                                                        <input required class="form-control square" name="housename" type="text">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>City <span class="required">*</span></label>
+                                                        <input required class="form-control square" name="city" type="text">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Pincode <span class="required">*</span></label>
+                                                        <input required class="form-control square" name="pincode" type="number">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>District <span class="required">*</span></label>
+                                                        <input required class="form-control square" name="district" type="text">
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-fill-out submit">Add Address</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Vendor JS-->
+<script src="user-profile-asset/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="user-profile-asset/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="user-profile-asset/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+<script src="user-profile-asset/js/vendor/bootstrap.bundle.min.js"></script>
+<script src="user-profile-asset/js/plugins/slick.js"></script>
+<script src="user-profile-asset/js/plugins/jquery.syotimer.min.js"></script>
+<script src="user-profile-asset/js/plugins/wow.js"></script>
+<script src="user-profile-asset/js/plugins/jquery-ui.js"></script>
+<script src="user-profile-asset/js/plugins/perfect-scrollbar.js"></script>
+<script src="user-profile-asset/js/plugins/magnific-popup.js"></script>
+<script src="user-profile-asset/js/plugins/select2.min.js"></script>
+<script src="user-profile-asset/js/plugins/waypoints.js"></script>
+<script src="user-profile-asset/js/plugins/counterup.js"></script>
+<script src="user-profile-asset/js/plugins/jquery.countdown.min.js"></script>
+<script src="user-profile-asset/js/plugins/images-loaded.js"></script>
+<script src="user-profile-asset/js/plugins/isotope.js"></script>
+<script src="user-profile-asset/js/plugins/scrollup.js"></script>
+<script src="user-profile-asset/js/plugins/jquery.vticker-min.js"></script>
+<script src="user-profile-asset/js/plugins/jquery.theia.sticky.js"></script>
+<!-- Template  JS -->
+<script src="user-profile-asset/js/main.js"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:27:15 GMT -->
+</html>

@@ -165,7 +165,6 @@ module.exports={
     },
 
     getOrderDetails: async(userid)=>{
-        console.log(userid);
         let order = await db.get().collection(collection.ORDERS).aggregate(
             [
                 {
@@ -174,7 +173,6 @@ module.exports={
                 }
             ]
             ).toArray()
-        console.log(order);
         return order
     },
 

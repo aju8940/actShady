@@ -52,5 +52,7 @@ router.get('/deliver-product/:id',middlewares.verifyAdminLogin,admincontroller.d
 
 router.get('/return-product/:id',middlewares.verifyAdminLogin,admincontroller.returnProduct)
 
+router.get('/graph-statics',middlewares.verifyAdminLogin,admincontroller.graphStatics)
+
 
 module.exports = router;

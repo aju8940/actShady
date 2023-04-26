@@ -35,8 +35,6 @@ router.get('/product-details/:id',usercontroller.productDetails)
 
 router.get('/shopping-cart',middlewares.verifyLogin,usercontroller.viewShoppingCart)
 
-router.get('/empty-cart',middlewares.verifyLogin,usercontroller.emptyCart)
-
 router.get('/add-to-cart/:id',middlewares.verifyLogin,usercontroller.addToCArt)
 
 router.post('/change-product-quantity',middlewares.verifyLogin,usercontroller.changeProQuantity)
@@ -56,5 +54,9 @@ router.get('/order-product-detail/:id',middlewares.verifyLogin,usercontroller.ge
 router.get('/return-order/:id',middlewares.verifyLogin,usercontroller.returnOrder)
 
 router.get('/cancel-order/:id',middlewares.verifyLogin,usercontroller.cancelOrder)
+
+router.post('/verify-payment',middlewares.verifyLogin,usercontroller.razorpayPayment)
+
+router.get('/edit-address/:id',middlewares.verifyLogin,usercontroller.getEditAddress)
 
 module.exports = router;
