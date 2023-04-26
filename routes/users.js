@@ -15,13 +15,19 @@ router.route('/signup')
 .get(usercontroller.signuppageRender)
 .post(middlewares.sessionHandle,usercontroller.signupPost)
 
+router.get('/forgot-password',usercontroller.forgotPassword)
+
+router.route('/change-password')
+.get(usercontroller.changePassword)
+.post(usercontroller.changePasswordPost)
+
 router.get('/otplogin',usercontroller.otpLoginRender)
 
 router.post('/send-otp',usercontroller.sendOtp)
 
-router.post('/otp-verify',usercontroller.verifyOtp)
-
 router.get('/logout',usercontroller.logOut)
+
+router.get('/user-profile',middlewares.verifyLogin,usercontroller.getProfile)
 
 router.get('/shop',usercontroller.viewProducts)
 

@@ -10,7 +10,6 @@ module.exports={
             let response={}
             let admin = await db.get().collection(collection.ADMIN_LOGIN).findOne({email:admindata.email})
             if(admin){
-                console.log(admin.password,'===================================');
                 bcrypt.compare(admindata.password,admin.password).then((status)=>{
                     if(status){
 

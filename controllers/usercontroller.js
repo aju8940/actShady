@@ -1,6 +1,5 @@
 const { response } = require('../app');
 const userHelper = require('../helpers/user-helpers')
-const twilio = require('../twilio')
 const productHelper = require('../helpers/product-helpers');
 
 
@@ -35,12 +34,11 @@ otpLoginRender: (req,res)=>{
 },
 
 sendOtp: (req,res)=>{
-  req.session.mobile=req.body.phone;
+  console.log(req.body.phone);
   userHelper.findUser(req.body.phone).then(async(user)=>{
     console.log(user);
     if(user){
       req.session.user = user
-      await twilio.sendOtp(req.body.phone)
       res.json(true)
     }else{
       req.session.user = null
@@ -50,20 +48,6 @@ sendOtp: (req,res)=>{
   })
     
 },
-
-verifyOtp : (req, res) =>{
-  twilio.verifyOtp(req.session.mobile, req.body.otp).then((result) =>{
-    console.log(result);
-      if(result === "approved"){
-          req.session.loggedIn=true;
-          res.json({status : true})                          
-      }
-      else{               
-          res.json({status : false})
-      }
-  })
-},  
-
 
 homepageRender:async(req,res)=>{
   const loggedIn = req.session.user
@@ -95,6 +79,27 @@ logOut:(req,res)=>{
       res.redirect('/')
     }
   })
+},
+
+forgotPassword: (req,res)=>{
+  res.render('userview/forgot-password',{layout:'userLoginLayout'})
+},
+
+changePassword: (req,res)=>{
+  res.render('userview/change-password',{layout:'userLoginLayout'})
+},
+
+changePasswordPost: (req,res)=>{
+  let userId = req.session.user._id
+  console.log(req.session.user);
+  userHelper.changePassword(req.body,userId).then(()=>{
+    req.session.destroy();
+    res.redirect('/login')
+  })
+},
+
+getProfile: (req,res)=>{
+  res.render('userview/user-profile')
 },
 
 viewProducts: (req,res)=>{
@@ -135,10 +140,6 @@ viewShoppingCart: async(req,res)=>{
     res.render('userview/shopping-cart',{products,loggedIn,cartCount,grandTotal})
     })
   
-},
-
-emptyCart: (req,res)=>{
-  res.render('userview/empty-cart')
 },
 
 addToCArt: (req,res)=>{
@@ -194,7 +195,6 @@ placeOrderPost: async(req,res) => {
   let payment = req.body.paymentMethod
   let products= await userHelper.getCartList(userId)
   let grandTotal = await userHelper.getTotalAmount(userId)
-  console.log('boddddddddddddddddddddddyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',req.body);
   userHelper.placeOrder(address,products,grandTotal,payment,userId,req.body)
   res.redirect('/orders')      
 },

@@ -1,63 +1,63 @@
-
-<section class="vh-100 ">
-    <br>
-    <br>
-    <div class="container py-5 h-100" >
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-xl-10 col-lg-5">
-          <div class="card"">
-            <div class="row g-0">
-              <div class="col-md-6 col-lg-5 d-none d-md-block">
-                <img src="userAssets/images/kkk.jpg"
-                  alt="login form" class="img-fluid" style="height: 100%; width: 100%;" />
-              </div>
-             
-              <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                <div class="card-body p-4 p-lg-5 text-black">
-  
-                  <form action="/login" method="post">
-                    <!-- <div>
-                        <a style="font-family: Arial, Helvetica, sans-serif;" href="/">Home</a>
-                      </div> -->
-
-                      <h1 class="mb-4 text-dark" style="font-family: fantasy; ">User Login</h1>
-
-                    <div>
-                        <h6 class=" text-center mb-4" >Login Using OTP <a href="/otplogin"
-                            style="color: #0059ff;">Click Here</a></h6>
-                            <h6 class="text-center mb-4 mt-3">Or</h6>
-
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input type="email" id="typeEmailX-2"  class="form-control form-control-lg"
-                        placeholder="Email" name="email" style="border-radius: 1rem;"/>
-                        <span id="email-error" class="validation" style="color: red;"></span>
-                    </div>
-  
-                    <div class="form-outline mb-4">
-                        <input type="password" id="typePasswordX-2"  class="form-control form-control-lg"
-                        placeholder="Password" name="password" style="border-radius: 1rem;"/>
-                        <span id="password-error" class="validation" style="color: red;"></span>
+<div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-11 col-lg-3">
+            <div class="card">
+                <div class=" row g-0">
+                    <div class="col-md-6 col-lg-5 d-none d-md-block">
+                        <img src="userAssets/images/kkk.jpg" alt="login form" class="img-fluid"
+                            style="height: 100%; width: 100%;" />
                     </div>
 
-                    <div>
-                        <button class="btn btn-success mb-3" type="submit" onclick="return validateForm()">Login</button>
-                        <span id="submit-error" class="validation" style="color: red;"></span>
+                    <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                        <div class="card-body p-4 p-lg-5 text-black">
+
+                            <form action="/login" method="post">
+                            
+                                <h1 class="mb-4 text-dark"
+                                    style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; ">
+                                    User Login</h1>
+
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="typeEmailX-2" class="form-control form-control-lg"
+                                        placeholder="Email" name="email" style="border-radius: 1rem;" />
+                                    <span id="email-error" class="validation" style="color: red;"></span>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="typePasswordX-2" class="form-control form-control-lg"
+                                        placeholder="Password" name="password" style="border-radius: 1rem;" />
+                                    <span id="password-error" class="validation" style="color: red;"></span>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <button class="btn btn-success mb-3" type="submit"
+                                            onclick="return validateForm()">Login</button>
+                                        <span id="submit-error" class="validation" style="color: red;"></span>
+                                    </div>
+                                    <div>
+                                        <a class="small text-muted mt-5 " href="/forgot-password">Forgot password?</a>
+                                    </div>
+                                </div>
+
+                                <h6 class=" pb-lg-2 mb-5 " style="color: #000000;">Don't have an account? <a
+                                        href="/signup" style="color: #0477fa;">Register here</a></h6>
+                            </form>
+
+                            <div>
+                                <h6 class=" text-center">Login Using OTP <a href="/otplogin"
+                                        style="color: #0059ff;">Click Here</a></h6>
+
+                            </div>
+
+                        </div>
                     </div>
-  
-                    <a class="small text-muted mt-5" href="#!">Forgot password?</a>
-                    <p class=" pb-lg-2" style="color: #000000;">Don't have an account? <a href="/signup"
-                        style="color: #0477fa;">Register here</a></p>
-                  </form>
-  
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
+</div>
+</section>
 
 <script>
 
@@ -80,22 +80,26 @@
     }
 
     function validatePassword() {
-        var password = document.getElementById('typePasswordX-2').value;
-        var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-        if (password.match(passChecker)) {
-            passwordError.innerHTML = '';
-            return true;
-        } else {
-            passwordError.innerHTML = 'Invalid Password';
-            return false;
+        var password = document.getElementById("typePasswordX-2").value;
+        if (password.length == 0) {
+          passwordError.innerHTML = "Password is required";
+          return false;
         }
-    }
-    
+        var passChecker = /^(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+        if (password.match(passChecker)) {
+          passwordError.innerHTML = "";
+          return true;
+        } else {
+          passwordError.innerHTML = "Invalid Password";
+          return false;
+        }
+      }
+
     function validateForm() {
         if (!validateEmail() || !validatePassword()) {
             submitError.style.display = 'flex';
             submitError.style.justifyContent = 'center';
-            submitError.innerHTML = 'something went to wrong';
+            submitError.innerHTML = 'Invalid Email or Password';
             setTimeout(() => {
                 submitError.style.display = 'none';
             }, 3000);
@@ -103,6 +107,3 @@
         }
     }
 </script>
-
-
-

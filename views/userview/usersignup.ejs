@@ -32,7 +32,7 @@
     
                       <div class="form-outline mb-4">
                         <input type="tel" id="typeNumberX-2" class="form-control form-control-md" placeholder="Phone Number"
-                        name="phone" style="border-radius: 1rem; width: 70%;" />
+                        name="phone" style="border-radius: 1rem; width: 70%;" value="+91"/>
                       <span id="number-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                       </div>
 
@@ -105,15 +105,15 @@
       function validatePassword() {
         var password = document.getElementById("typePasswordX-2").value;
         if (password.length == 0) {
-          passwordError.innerHTML = "Password must contain 6 characters";
+          passwordError.innerHTML = "Password must contain atleast 6 characters";
           return false;
         }
-        var passChecker = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+        var passChecker = /^(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
         if (password.match(passChecker)) {
           passwordError.innerHTML = "";
           return true;
         } else {
-          passwordError.innerHTML = "";
+          passwordError.innerHTML = "Password must contain atleast 1 uppercase letter";
           return false;
         }
       }
@@ -121,8 +121,12 @@
       function validateConfirmPassword(){
         let password = document.getElementById('typePasswordX-2').value
         let confirmPassword = document.getElementById('typeConfirmPassword').value
-        if (password != confirmPassword){
+        if (confirmPassword == "") {
+            confirmError.innerText = "This field is required";
+            return false;
+          }else if(password != confirmPassword){
           confirmError.innerText = "Password doesnt match"
+          return false;
         }else{
           return true
         }
@@ -143,10 +147,10 @@
       }
   
       function validateForm() {
-        if (!validateName() || !validateEmail() || !validatePassword()) {
+        if (!validateName() || !validateEmail() || !validatePassword() || !validatePhonenumber() || !validateConfirmPassword()) {
           submitError.style.display = "flex";
           submitError.style.justifyContent = "center";
-          submitError.innerHTML = "Please enter the details";
+          submitError.innerHTML = "Please enter the details properly";
           setTimeout(() => {
             submitError.style.display = "none";
           }, 3000);

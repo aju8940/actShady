@@ -7,28 +7,28 @@
 
                         <h1 class="mb-4 text-light" style="font-family: fantasy;">ADMIN LOGIN</h1>
                         
-                            <p class="text-center" style="color: rgb(180, 17, 17)">
                              
                             </p>
                         <form action="/admin/login" method="post">
 
                             <div class="form-outline mb-4">
-                                <input type="email" id="typeEmailX-2" onkeyup="validateEmail()" class="form-control form-control-lg"
+                                <input type="email" id="typeEmailX-2" class="form-control form-control-lg"
                                     placeholder="Email" name="email" style="border-radius: 1rem;"/>
                                     <span id="email-error" class="validation" style="color: red;"></span>
                             </div>
 
                             <div class="form-outline mb-1">
-                                <input type="password" id="typePasswordX-2" onkeyup="validatePassword()" class="form-control form-control-lg"
+                                <input type="password" id="typePasswordX-2" class="form-control form-control-lg"
                                     placeholder="Password" name="password" style="border-radius: 1rem;"/>
                                     <span id="password-error" class="validation" style="color: red;"></span>
                             </div>
                            
                            
-                            <div id="submit-error">
+                            <div>
                             <button class="btn btn-success mb-3 mt-3" type="submit" onclick="return validateForm()">Login</button>
                         </div>
-                       
+                        <span id="submit-error" class="validation" style="color: red;"></span>
+
                         
                         </form>
                     </div>
@@ -44,6 +44,7 @@
     
 
     var emailError = document.getElementById('email-error');
+    var submitError = document.getElementById('submit-error');
  
     function validateEmail() {
         var email = document.getElementById('typeEmailX-2').value;
@@ -63,7 +64,7 @@
         if (!validateEmail()) {
             submitError.style.display = 'flex';
             submitError.style.justifyContent = 'center';
-            submitError.innerHTML = 'something went to wrong';
+            submitError.innerHTML = 'Invalid Email or Password';
             setTimeout(() => {
                 submitError.style.display = 'none';
             }, 3000);

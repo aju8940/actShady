@@ -74,12 +74,26 @@ module.exports={
     },
 
     addCategory : (category)=>{
+        category.status = true
         return new Promise((res,rej)=>{
             db.get().collection(collection.PRODUCT_CATEGORY).insertOne(category).then((data)=>{
                 res(data.insertedId)
             })
         })
         
+    },
+
+    editCategory: async(newCategory,catId)=>{
+        await db.get().collection(collection.PRODUCT_CATEGORY).updateOne(
+            {
+                _id:new ObjectId(catId)
+            },
+            {
+                $set:{
+                    category:newCategory.name
+                }
+            }
+        )
     },
 
     getProducts: ()=>{
@@ -94,6 +108,34 @@ module.exports={
             let category = await db.get().collection(collection.PRODUCT_CATEGORY).find().toArray()
             res(category)
         })
+    },
+
+    listCategory: async(catId)=>{
+        await db.get().collection(collection.PRODUCT_CATEGORY).updateOne(
+            {
+                _id:new ObjectId(catId)
+            },
+            {
+                $set:{
+                    status:true
+                }
+            }
+
+        )
+    },
+
+    unListCategory: async(catId)=>{
+        await db.get().collection(collection.PRODUCT_CATEGORY).updateOne(
+            {
+                _id:new ObjectId(catId)
+            },
+            {
+                $set:{
+                    status:false
+                }
+            }
+
+        )
     },
 
     blockProduct: (proId)=>{

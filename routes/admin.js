@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const admincontroller = require('../controllers/admincontroller')
 const upload = require('../utils/multer')
-const middlewares = require('../middlewares/middlewares')
+const middlewares = require('../middlewares/middlewares');
+const productHelpers = require('../helpers/product-helpers');
 
 /* GET home page. */
 router.get('/',admincontroller.adminPage)
@@ -29,8 +30,11 @@ router.route('/category-list')
 .get(middlewares.verifyAdminLogin,admincontroller.categoryList)
 .post(admincontroller.addCategoryPost)
 
-// router.route('/edit-category/:id')
-// .get(middlewares.verifyAdminLogin,admincontroller)
+router.post('/edit-category/:id',middlewares.verifyAdminLogin,admincontroller.editCategory)
+
+router.get('/list-category/:id',middlewares.verifyAdminLogin,admincontroller.listCategory)
+
+router.get('/unlist-category/:id',middlewares.verifyAdminLogin,admincontroller.unListCategory)
 
 router.get('/logout',admincontroller.adminLogout)
 

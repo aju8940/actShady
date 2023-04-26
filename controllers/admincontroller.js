@@ -7,6 +7,7 @@ const cloudinary= require('../utils/cloudinary')
 const upload= require('../utils/multer')
 const path = require('path');
 const { log } = require('console');
+const { ObjectId } = require('mongodb');
 
 
 module.exports={
@@ -31,8 +32,8 @@ module.exports={
                 req.session.admin = response.admin
                 res.redirect('/admin')
             }else{
-            
-                res.redirect('/login')
+                res.redirect('/admin')
+
             }
         })
     },
@@ -49,7 +50,7 @@ module.exports={
 
     addCategoryPost: (req,res)=>{
             productHelpers.addCategory(req.body).then(()=>{
-                res.redirect('/admin')
+                res.redirect('/admin/category-list')
             })
     },
 
@@ -58,6 +59,26 @@ module.exports={
             res.render('adminview/category-list',{category,layout:'adminLayout'})
         })
             
+    },
+
+    editCategory: (req,res)=>{
+        console.log(req.params.id);
+        console.log(req.body);
+        productHelpers.editCategory(req.body,req.params.id).then(()=>{
+            res.redirect('/admin/category-list')
+        })
+    },
+
+    listCategory: (req,res)=>{
+        productHelpers.listCategory(req.params.id).then(()=>{
+            res.redirect('/admin/category-list')
+        })
+    },
+
+    unListCategory: (req,res)=>{
+        productHelpers.unListCategory(req.params.id).then(()=>{
+            res.redirect('/admin/category-list')
+        })
     },
 
     addProduct:(req,res)=>{

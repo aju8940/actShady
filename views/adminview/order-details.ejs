@@ -47,7 +47,11 @@
                 </td>
 
                 <td>
-                  date
+                  <%= new Date(order.date).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  }).replace(/\//g, '-')%>
                 </td>
 
                 <% if (order.orderstatus==="placed" ) { %>

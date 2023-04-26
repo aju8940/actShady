@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<% if (cartCount>0  ) { %>
+<% if (orders  ) { %>
 
 <section class="container intro mt-5 mb-5">
   <div class="gradient-custom-1 h-100">
@@ -42,7 +42,11 @@
                   <% orders.forEach(order=> { %>
 
                     <tr>
-                      <th>Date</th>
+                      <th><%= new Date(order.date).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                      }).replace(/\//g, '-')%></th>
                       <td style="max-width: 150px;">
                         <%=order.deliveryAddress.name%>,
                           <%=order.deliveryAddress.address%>,

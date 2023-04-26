@@ -15,6 +15,22 @@ module.exports={
             
         })
     },
+
+    changePassword: async(userData,userId)=>{
+        console.log(userId);
+        console.log('userData',userData);
+        userData.password = await bcrypt.hash(userData.password,10)
+        db.get().collection(collection.USER).updateOne(
+            {
+                _id:new ObjectId(userId)
+            },
+            {
+                $set:{password:userData.password}
+            }
+            )
+        
+    },
+
     doLogin:(userData)=>{
         return new Promise(async (res,rej)=>{
             let response={}
@@ -91,8 +107,10 @@ module.exports={
           const user = await db.get().collection(collection.USER).findOne({ phone: mobNo });
           if (user && user.status) {
             return user;
+          }else{
+            return false;
           }
-          return false;
+          
         } catch (err) {
           console.log(err);
         }
@@ -276,10 +294,11 @@ module.exports={
                 status:status,
                 orderstatus:'placed',
                 totalPrice:grandTotal,
-                date: new Date()
+                date: Date.now()
             }
+
             db.get().collection(collection.ORDERS).insertOne(orderObj)
-            db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(req.body.userId)})
+            db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)})
         })
     },
 

@@ -17,7 +17,7 @@
             <div class="mb-2">
               <label for="product_name" class="form-label">Product Name</label>
               <input type="text" placeholder="Product Name" required name="name" class="form-control" id="name">
-              <span id="name-error" class="validation" style="color: rgb(87, 87, 87)"></span>
+              <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
             </div>
 
           <div>
@@ -25,7 +25,8 @@
               <option selected >Category</option>
 
               <% for (var i =0; i < category.length;  i++ ) { %>
-              <option value="<%=category[i].category%>"><%=category[i].category%></option>
+
+              <option value="<%=category[i].category%>" required><%=category[i].category%></option>
               <% } %>
 
             </select>
@@ -35,16 +36,16 @@
               <div class="col-lg-4">
                 <div class="mb-2">
                   <label class="form-label">Price</label>
-                    <input placeholder="$" type="number" required name="price" class="form-control">
-                    <span id="price-error" class="validation" style="color: rgb(87, 87, 87)"></span>
+                    <input placeholder="$" type="number" name="price" class="form-control">
+                    <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                 </div>
               </div>
             </div>
 
             <div class="mb-2">
               <label class="form-label">Description</label>
-              <textarea placeholder="Product Description" id="description" required name="description" class="form-control" rows="4"></textarea>
-              <span id="description-error" class="validation" style="color: rgb(87, 87, 87)"></span>
+              <textarea placeholder="Product Description" required id="description" name="description" class="form-control" rows="4"></textarea>
+              <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
             </div>
 
             <div class="">
