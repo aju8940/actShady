@@ -170,6 +170,9 @@ module.exports={
                 {
                     $match:{userId:ObjectId(userid)
                     }
+                },
+                {
+                    $sort:{date: -1}
                 }
             ]
             ).toArray()

@@ -1,64 +1,3 @@
-<!-- <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-xl-11 col-lg-3">
-            <div class="card">
-                <div class=" row g-0">
-                    <div class="col-md-6 col-lg-5 d-none d-md-block">
-                        <img src="userAssets/images/kkk.jpg" alt="login form" class="img-fluid"
-                            style="height: 100%; width: 100%;" />
-                    </div>
-
-                    <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                        <div class="card-body p-4 p-lg-5 text-black">
-
-                            <form action="/login" method="post">
-                            
-                                <h1 class="mb-4 text-dark"
-                                    style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; ">
-                                    User Login</h1>
-
-                                <div class="form-outline mb-4">
-                                    <input type="email" id="typeEmailX-2" class="form-control form-control-lg"
-                                        placeholder="Email" name="email" style="border-radius: 1rem;" />
-                                    <span id="email-error" class="validation" style="color: red;"></span>
-                                </div>
-
-                                <div class="form-outline mb-4">
-                                    <input type="password" id="typePasswordX-2" class="form-control form-control-lg"
-                                        placeholder="Password" name="password" style="border-radius: 1rem;" />
-                                    <span id="password-error" class="validation" style="color: red;"></span>
-                                </div>
-
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <button class="btn btn-success mb-3" type="submit"
-                                            onclick="return validateForm()">Login</button>
-                                        <span id="submit-error" class="validation" style="color: red;"></span>
-                                    </div>
-                                    <div>
-                                        <a class="small text-muted mt-5 " href="/forgot-password">Forgot password?</a>
-                                    </div>
-                                </div>
-
-                                <h6 class=" pb-lg-2 mb-5 " style="color: #000000;">Don't have an account? <a
-                                        href="/signup" style="color: #0477fa;">Register here</a></h6>
-                            </form>
-
-                            <div>
-                                <h6 class=" text-center">Login Using OTP <a href="/otplogin"
-                                        style="color: #0059ff;">Click Here</a></h6>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</section> -->
-
 <body>
     <main>
         <section class="content-main mt-80 mb-80">
@@ -81,6 +20,10 @@
                                 <span class="form-check-label">Remember</span>
                             </label>
                         </div> <!-- form-group form-check .// -->
+                        <% if(message) { %>
+                            <p style="color: red;"><%=message%></p>
+                            <% } %>
+
                         <div class="mb-4">
                             <button class="btn btn-primary w-100 mb-3" type="submit"
                                 onclick="return validateForm()">Login</button>
@@ -137,8 +80,10 @@
             }
         }
 
+
         function validateForm() {
             if (!validateEmail() || !validatePassword()) {
+
                 submitError.style.display = 'flex';
                 submitError.style.justifyContent = 'center';
                 submitError.innerHTML = 'Invalid Email or Password';

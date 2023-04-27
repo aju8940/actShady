@@ -18,40 +18,42 @@
                                 <div class="tab-pane active" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h5>Add Address</h5>
+                                            <h5>Edit Address</h5>
                                         </div>
                                         <div class="card-body">
                                             
-                                            <form action="/add-address" method="post">
+                                            <form action="/edit-address/<%=userAddress._id%>" method="post">
+                                                
                                                 <div class="row">
                                                     <div class="form-group col-md-12">
                                                         <label>Name <span class="required">*</span></label>
-                                                        <input required class="form-control square" name="name" type="text">
+                                                        <input required value="<%=userAddress.name%>" class="form-control square" name="name" type="text">
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Phone Number <span class="required">*</span></label>
-                                                        <input required class="form-control square" name="phone" type="tel">
+                                                        <input required class="form-control square" value="<%=userAddress.phone%>" name="phone" type="tel">
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Residential Address <span class="required">*</span></label>
-                                                        <input required class="form-control square" name="housename" type="text">
+                                                        <input required class="form-control square" value="<%=userAddress.housename%>" name="housename" type="text">
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>City <span class="required">*</span></label>
-                                                        <input required class="form-control square" name="city" type="text">
+                                                        <input required class="form-control square" value="<%=userAddress.city%>" name="city" type="text">
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>Pincode <span class="required">*</span></label>
-                                                        <input required class="form-control square" name="pincode" type="number">
+                                                        <input required class="form-control square" value="<%=userAddress.pincode%>" name="pincode" type="number">
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <label>District <span class="required">*</span></label>
-                                                        <input required class="form-control square" name="district" type="text">
+                                                        <input required class="form-control square" value="<%=userAddress.district%>" name="district" type="text">
                                                     </div>
                                                     <div class="col-md-12 ">
                                                         <button type="submit" class="btn btn-primary submit ">Add Address</button>
                                                     </div>
                                                 </div>
+                                                
                                             </form>
                                         </div>
                                     </div>

@@ -65,7 +65,7 @@
                                         <div class="col-lg-6 mb-3">
                                             <div class="card mb-3 mb-lg-0">
                                                 <div class="card-body">
-                                                    <address><%=user.name%><br> <%=user.phone%>,<br> <%=user.phone%>, <br><%=user.city%>, <br><%=user.district%> ,<br>Pincode : <%=user.pincode%></address>
+                                                    <address><%=user.name%><br> <%=user.phone%>,<br> <%=user.housename%>, <br><%=user.city%>, <br><%=user.district%> ,<br>Pincode : <%=user.pincode%></address>
                                                     <br>
                                                     <a class="text-primary" href="/edit-address/<%=user._id%>">Edit Address</a>
                                                 </div>
@@ -88,7 +88,7 @@
                                         </div>
                                         <div class="card-body">
                                             
-                                            <form action="/add-address" method="post">
+                                            <form action="/add-new-address" method="post">
                                                 <div class="row">
                                                     <div class="form-group col-md-12">
                                                         <label>Name <span class="required">*</span></label>

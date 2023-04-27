@@ -92,9 +92,9 @@ module.exports = {
     blockUser: (userId) => {
         return new Promise(async (res, rej) => {
             await db.get().collection(collection.USER).updateOne({ _id: new ObjectId(userId) }, { $set: { status: false } })
-                .then((response) => {
-                    res(response)
-                    console.log(response);
+                .then((status) => {
+                    res(status)
+                    console.log(status);
                 })
         })
     },
@@ -162,6 +162,48 @@ module.exports = {
                     products: [proObj]
                 }
                 await db.get().collection(collection.CART_COLLECTION).insertOne(cartObj).then((response) => {
+                    res()
+                })
+            }
+        })
+    },
+
+    addToWishlist: (proId, userId) => {
+        let proObj = {
+            item: ObjectId(proId)
+        }
+        return new Promise(async (res, rej) => {
+            let userWishlist = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({ user: ObjectId(userId) })
+            if (userWishlist) {
+                let proExist = userWishlist.products.findIndex(product => product.item == proId)
+                console.log(proExist);
+                if (proExist != -1) {
+                    db.get().collection(collection.WISHLIST_COLLECTION)
+                        .updateOne({ user: ObjectId(userId), 'products.item': ObjectId(proId) },
+                            {
+                                $inc: { 'products.$.quantity': 1 }
+                            }).then(() => {
+                                res()
+                            })
+                } else {
+                    await db.get().collection(collection.WISHLIST_COLLECTION).updateOne
+                        (
+                            {
+                                user: ObjectId(userId)
+                            },
+                            {
+                                $push: { products: proObj }
+                            }
+                        ).then((response) => {
+                            res()
+                        })
+                }
+            } else {
+                let wishlistObj = {
+                    user: ObjectId(userId),
+                    products: [proObj]
+                }
+                await db.get().collection(collection.WISHLIST_COLLECTION).insertOne(wishlistObj).then((response) => {
                     res()
                 })
             }
@@ -334,6 +376,29 @@ module.exports = {
         })
     },
 
+    editAddress:(userId,addDetails,addressId)=>{
+        return new Promise((res,rej)=>{
+            db.get().collection(collection.USER).updateOne(
+                {
+                    _id:ObjectId(userId),
+                    address: { $elemMatch: { _id: ObjectId(addressId)  } }
+                },
+            {
+                $set:{
+                    'address.$.name': addDetails.name,
+                    'address.$.phone':addDetails.phone,
+                    'address.$.city':addDetails.city,
+                    'address.$.housename':addDetails.housename,
+                    'address.$.pincode':addDetails.pincode,
+                    'address.$.district':addDetails.district
+                }
+            }).then((response)=>{
+                console.log(response);
+                res(response)
+            })
+        })
+    },
+
     getTotalAmount: (userId) => {
         return new Promise(async (resolve, reject) => {
             let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
@@ -366,11 +431,12 @@ module.exports = {
                 {
                     $group: {
                         _id: null,
-                        total: { $sum: { $multiply: ['$quantity','$product.price'] } }
+                        total: { $sum: { $multiply: ['$quantity',{$toInt:'$product.price'}] } }
                     }
                 }
             ]).toArray()
 
+            console.log(total);
             resolve(total[0].total)
         })
     },

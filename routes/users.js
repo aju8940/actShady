@@ -45,6 +45,8 @@ router.get('/checkout-page',middlewares.verifyLogin,usercontroller.checkOut)
 
 router.post('/add-address',middlewares.verifyLogin,usercontroller.addAddressPost);
 
+router.post('/add-new-address',middlewares.verifyLogin,usercontroller.addNewAddress);
+
 router.post('/place-order',middlewares.verifyLogin,usercontroller.placeOrderPost)
 
 router.get('/orders',middlewares.verifyLogin,usercontroller.getOrders)
@@ -58,5 +60,11 @@ router.get('/cancel-order/:id',middlewares.verifyLogin,usercontroller.cancelOrde
 router.post('/verify-payment',middlewares.verifyLogin,usercontroller.razorpayPayment)
 
 router.get('/edit-address/:id',middlewares.verifyLogin,usercontroller.getEditAddress)
+
+router.post('/edit-address/:id',middlewares.verifyLogin,usercontroller.editAddressPost)
+
+router.get('/wishlist',middlewares.verifyLogin,usercontroller.getWishlist)
+
+router.get('/add-to-wishlist/:id',middlewares.verifyLogin,usercontroller.addToWishlist)
 
 module.exports = router;

@@ -18,8 +18,10 @@ module.exports={
             let order = await productHelpers.getAllOrders()
             let orderCount = order.length
             let total = await adminHelpers.totalAmount()
+            let products = await productHelpers.productCount()
             console.log(total);
-            res.render('adminview/index',{orderCount,total,layout:"adminlayout"})
+            let totalRevenue=total[0].total
+            res.render('adminview/index',{orderCount,products,totalRevenue,layout:"adminlayout"})
         }else{
             
             res.render('adminview/adminlogin',{layout:"adLoginLayout"})
@@ -124,7 +126,6 @@ module.exports={
     },
 
     editProductPost:(req,res)=>{
-        console.log("0qqqqqqqqq000000000000000000000000000");
         console.log(req.body);
         productHelpers.updateProduct(req.params.id,req.body).then(()=>{
             res.redirect('/admin/product-list')
@@ -150,10 +151,6 @@ module.exports={
     },
 
     userList: async(req,res)=>{
-            // userHelpers.getAllUsers().then((users)=>{
-            //     res.render('adminview/userlist',{users ,layout:'adminLayout'})
-            // })
-
             const page = parseInt(req.query.page) || 1;
             const pageSize = parseInt(req.query.pageSize) || 5;
             const skip = (page - 1) * pageSize;
@@ -168,10 +165,11 @@ module.exports={
     },
 
     blockUser: async (req, res) => {
-        console.log('fffffffffffffffffffffffffffffffffff');
         let userId = req.params.id;
+    
             await userHelpers.blockUser(userId).then(()=>{
-                res.redirect("/admin/user-list");
+                    res.redirect("/admin/user-list");
+                
             })
     },
 

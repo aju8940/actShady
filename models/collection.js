@@ -4,5 +4,6 @@ module.exports={
     ADMIN_LOGIN: 'admin',
     PRODUCT_CATEGORY : 'category',
     CART_COLLECTION :'cart',
-    ORDERS : 'orders'
+    ORDERS : 'orders',
+    WISHLIST_COLLECTION : 'wishlist'
 }

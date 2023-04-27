@@ -1,10 +1,11 @@
 const { response } = require("../app");
 const userHelper = require("../helpers/user-helpers");
 const productHelper = require("../helpers/product-helpers");
+const session = require("express-session");
 
 module.exports = {
   loginpageRender: (req, res) => {
-    res.render("userview/userlogin", { layout: "userLoginLayout" });
+    res.render("userview/userlogin", { message:false,layout: "userLoginLayout" });
   },
 
   loginPost: (req, res) => {
@@ -16,11 +17,11 @@ module.exports = {
           res.redirect("/");
         } else {
           req.session.logErr = "Blocked Account";
-          res.redirect("/login");
+          res.render("userview/userlogin",{layout: "userLoginLayout",message:"You are blocked...!!!"});
         }
       } else {
         req.session.logErr = "Invalid email or password";
-        res.redirect("/login");
+        res.render("userview/userlogin",{message:"Invalid Email or Password"});
       }
     });
   },
@@ -144,6 +145,7 @@ module.exports = {
         loggedIn,
         cartCount,
         grandTotal,
+        
       });
     });
   },
@@ -152,6 +154,12 @@ module.exports = {
     userHelper.addToCart(req.params.id, req.session.user._id).then(() => {
       res.redirect("/shop");
     });
+  },
+
+  addToWishlist: (req,res)=>{
+    userHelper.addWishlist(req.params.id,req,session.user._id).then(()=>{
+      res.redirect('/shop')
+    })
   },
 
   changeProQuantity: (req, res) => {
@@ -194,6 +202,18 @@ module.exports = {
       userHelper.findUserId(req.session.user._id).then((user) => {
         req.session.user = user;
         res.render("/checkout-page");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  addNewAddress: (req,res)=>{
+    try {
+      userHelper.updateAddress(req.body, req.session.user._id);
+      userHelper.findUserId(req.session.user._id).then((user) => {
+        req.session.user = user;
+        res.redirect('/user-profile')
       });
     } catch (error) {
       console.log(error);
@@ -275,8 +295,20 @@ module.exports = {
   getEditAddress: async(req,res)=>{
     let loggedIn = req.session.user;
     let cartCount =await userHelper.getCartCount(req.session.user._id);
-    console.log(req.params.id);
-    res.render("userview/edit-address")
+    let userAddress = await userHelper.getUserAddress(req.session.user._id,req.params.id)
+    res.render("userview/edit-address",{loggedIn,cartCount,userAddress})
+  },
+
+  editAddressPost: (req,res)=>{
+    userHelper.editAddress(req.session.user._id,req.body,req.params.id).then(()=>{
+      res.redirect('/user-profile')
+    })
+  },
+
+  getWishlist: async(req,res)=>{
+    let loggedIn = req.session.user;
+    let cartCount = await userHelper.getCartCount(req.session.user._id);
+    res.render('userview/wishlist',{loggedIn,cartCount})
   }
 
 }
