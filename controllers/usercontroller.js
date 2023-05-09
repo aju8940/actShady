@@ -1,39 +1,51 @@
-const { response } = require("../app");
+const { response, param } = require("../app");
 const userHelper = require("../helpers/user-helpers");
 const productHelper = require("../helpers/product-helpers");
 const session = require("express-session");
+const Razorpay = require("razorpay");
 
 module.exports = {
   loginpageRender: (req, res) => {
-    res.render("userview/userlogin", { message:false,layout: "userLoginLayout" });
+    try {
+      res.render("userview/userlogin", { "logErr": req.session.logErr, layout: "userLoginLayout" });
+    } catch (error) {
+      console.error(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  loginPost: (req, res) => {
-    userHelper.doLogin(req.body).then((response) => {
+  loginPost: async (req, res) => {
+    try {
+      const response = await userHelper.doLogin(req.body);
       if (response.status) {
-        if (response.unblocked) {
-          req.session.loggedIn = true;
-          req.session.user = response.user;
-          res.redirect("/");
-        } else {
-          req.session.logErr = "Blocked Account";
-          res.render("userview/userlogin",{layout: "userLoginLayout",message:"You are blocked...!!!"});
-        }
+        req.session.loggedIn = true;
+        req.session.user = response.user;
+        res.redirect("/");
       } else {
-        req.session.logErr = "Invalid email or password";
-        res.render("userview/userlogin",{message:"Invalid Email or Password"});
+        req.session.logErr = response.message;
+        res.redirect('/login')
       }
-    });
+
+    } catch (error) {
+      console.error(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   otpLoginRender: (req, res) => {
-    res.render("userview/otp-login", { layout: "userLoginLayout" });
-    req.session.otpLoginError = false;
+    try {
+      res.render("userview/otp-login", { layout: "userLoginLayout" });
+      req.session.otpLoginError = false;
+    } catch (error) {
+      console.error(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  sendOtp: (req, res) => {
-    console.log(req.body.phone);
-    userHelper.findUser(req.body.phone).then(async (user) => {
+  sendOtp: async (req, res) => {
+    try {
+      console.log(req.body.phone);
+      const user = await userHelper.findUser(req.body.phone);
       console.log(user);
       if (user) {
         req.session.user = user;
@@ -43,157 +55,291 @@ module.exports = {
         req.session.otpLoginError = "Phone Number doest exist";
         res.json(false);
       }
-    });
+    } catch (error) {
+      console.error(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   homepageRender: async (req, res) => {
-    const loggedIn = req.session.user;
-    if (req.session.user) {
-      let cartCount = await userHelper.getCartCount(req.session.user._id);
-      res.render("userview/index", { loggedIn, cartCount });
-    } else {
-      res.render("userview/index");
+    try {
+      const loggedIn = req.session.user;
+      if (req.session.user) {
+        let cartCount = await userHelper.getCartCount(req.session.user._id);
+        res.render("userview/index", { loggedIn, cartCount });
+      } else {
+        res.render("userview/index");
+      }
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
     }
   },
 
   signuppageRender: (req, res) => {
-    res.render("userview/usersignup", { layout: "userLoginLayout" });
+    try {
+      res.render("userview/usersignup", { layout: "userLoginLayout", 'logErr': req.session.logErr });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  signupPost: (req, res) => {
-    userHelper.doSignup(req.body).then((user) => {
-      req.session.user = user;
-      req.session.loggedIn = true;
-      res.redirect("/");
-    });
+  signupPost: async (req, res) => {
+    try {
+      userHelper.doSignup(req.body).then((user) => {
+        if (user.status) {
+          req.session.user = user;
+          req.session.loggedIn = true;
+          res.redirect("/");
+        } else {
+          req.session.logErr = user.message
+          res.redirect('/signup')
+        }
+
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   logOut: (req, res) => {
-    req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.redirect("/");
-      }
-    });
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("An error occurred");
+        } else {
+          res.redirect("/");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   forgotPassword: (req, res) => {
-    res.render("userview/forgot-password", { layout: "userLoginLayout" });
+    try {
+      res.render("userview/forgot-password", { layout: "userLoginLayout" });
+    } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   changePassword: (req, res) => {
-    res.render("userview/change-password", { layout: "userLoginLayout" });
+    try {
+      res.render("userview/change-password", { layout: "userLoginLayout" });
+    } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   changePasswordPost: (req, res) => {
-    let userId = req.session.user._id;
-    console.log(req.session.user);
-    userHelper.changePassword(req.body, userId).then(() => {
-      req.session.destroy();
-      res.redirect("/login");
-    });
+    try {
+      let userId = req.session.user._id;
+      console.log(req.session.user);
+      userHelper.changePassword(req.body, userId).then(() => {
+        req.session.destroy();
+        res.redirect("/login");
+      });
+    } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  getProfile: async(req, res) => {
-    let loggedIn = req.session.user;
-    let cartCount =await userHelper.getCartCount(req.session.user._id);
-    let userAddress = req.session.user.address;
-    res.render("userview/user-profile",{loggedIn,cartCount,userAddress});
+  getProfile: async (req, res) => {
+    try {
+      let loggedIn = req.session.user;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let userAddress = await userHelper.getAllAddress(req.session.user._id);
+      res.render("userview/user-profile", { loggedIn, cartCount, userAddress });
+    } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  viewProducts: (req, res) => {
-    let loggedIn = req.session.user;
-    productHelper.getProducts().then(async (products) => {
-      if (req.session.user) {
-        let cartCount = await userHelper.getCartCount(req.session.user._id);
-        res.render("userview/shop", { loggedIn, products, cartCount });
-      } else {
-        res.render("userview/shop", { products });
-      }
-    });
+  getEditAddress: async (req, res) => {
+    try {
+      let loggedIn = req.session.user;
+      let user = await userHelper.findUserId(req.session.user._id)
+      let userId = user._id
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let userAddress = await userHelper.getUserAddress(req.session.user._id, req.params.id)
+      res.render("userview/edit-address", { loggedIn, userId, cartCount, userAddress })
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
   },
 
-  productDetails: async (req, res) => {
-    let loggedIn = req.session.user;
+  editAddressPost: (req, res) => {
+    try {
+      userHelper.editAddress(req.session.user._id, req.body, req.params.id).then(() => {
+        res.redirect('/user-profile')
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
+  },
 
-    productHelper.getProductDetails(req.params.id).then(async (product) => {
-      if (req.session.user) {
-        let cartCount = await userHelper.getCartCount(req.session.user._id);
-        res.render("userview/product-details", {
-          loggedIn,
-          product,
-          cartCount,
-        });
-      } else {
-        res.render("userview/product-details", { product });
-      }
-    });
+  getEditUser: async (req, res) => {
+    try {
+      let loggedIn = req.session.user
+      let user = await userHelper.findUserId(req.session.user._id)
+      let userId = user._id
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      res.render("userview/edit-user", { loggedIn, userId, cartCount, user })
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
+  },
+
+  editUserPost: (req, res) => {
+    try {
+      userHelper.editUser(req.session.user._id, req.body).then(() => {
+        res.redirect('/user-profile')
+      })
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
+  },
+
+  viewProducts: async (req, res) => {
+    try {
+      let loggedIn = req.session.user;
+      let categories = await productHelper.getAllCategory()
+      console.log(categories);
+      productHelper.getProducts().then(async (products) => {
+        if (req.session.user) {
+          let cartCount = await userHelper.getCartCount(req.session.user._id);
+          res.render("userview/shop", { loggedIn, products, cartCount, categories });
+        } else {
+          res.render("userview/shop", { products, categories });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
+  },
+
+  productDetails: (req, res) => {
+    try {
+      let loggedIn = req.session.user;
+      console.log(req.query.id);
+      productHelper.getProductDetails(req.query.id).then(async (product) => {
+        if (req.session.user) {
+          let cartCount = await userHelper.getCartCount(req.session.user._id);
+          res.render("userview/product-details", {
+            loggedIn,
+            product,
+            cartCount,
+          });
+        } else {
+          res.render("userview/product-details", { product });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
   },
 
   viewShoppingCart: async (req, res) => {
-    let loggedIn = req.session.user;
-    let cartCount = await userHelper.getCartCount(req.session.user._id);
-    userHelper.getCartProducts(req.session.user._id).then((products) => {
-      let grandTotal = 0;
-      products.forEach((pro) => {
-        pro.subtotal = pro.quantity * pro.product.price;
-        grandTotal = grandTotal + pro.subtotal;
-      });
+    try {
+      let loggedIn = req.session.user;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let products = await userHelper.getCartProducts(req.session.user._id);
+      let grandTotal = await userHelper.getTotalAmount(req.session.user._id);
+      console.log(grandTotal, 'GRANDTOTAL');
       res.render("userview/shopping-cart", {
         products,
         loggedIn,
         cartCount,
         grandTotal,
-        
       });
-    });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
   },
 
-  addToCArt: (req, res) => {
-    userHelper.addToCart(req.params.id, req.session.user._id).then(() => {
-      res.redirect("/shop");
-    });
+  addToCart: (req, res) => {
+    try {
+      userHelper.addToCart(req.params.id, req.session.user._id).then(() => {
+        res.redirect("/shop");
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
   },
 
-  addToWishlist: (req,res)=>{
-    userHelper.addWishlist(req.params.id,req,session.user._id).then(()=>{
-      res.redirect('/shop')
-    })
+  addToWishlist: (req, res) => {
+    try {
+      userHelper.addWishlist(req.params.id, req.session.user._id).then(() => {
+        res.redirect('/shop')
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: "An error occurred" });
+    }
   },
 
   changeProQuantity: (req, res) => {
-    userHelper.changeProductQuantity(req.body).then((response) => {
-      res.json({
-        response,
+    try {
+      userHelper.changeProductQuantity(req.body).then((response) => {
+        res.json({
+          response,
+        });
       });
-    });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   removeCartProduct: (req, res) => {
-    userHelper.removeProductCart(req.body).then((response) => {
-      res.json(response);
-    });
+    try {
+      userHelper.removeProductCart(req.body).then((response) => {
+        res.json(response);
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   checkOut: async (req, res) => {
-    let loggedIn = req.session.user;
-    const userAddress = req.session.user.address;
-    let cartCount = await userHelper.getCartCount(req.session.user._id);
-    userHelper.getCartProducts(req.session.user._id).then((products) => {
-      let grandTotal = 0;
-      products.forEach((pro) => {
-        pro.subtotal = pro.quantity * pro.product.price;
-        grandTotal = grandTotal + pro.subtotal;
-      });
+    try {
+      let loggedIn = req.session.user;
+      const userAddress = req.session.user.address;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let total = await userHelper.getTotalAmount(req.session.user._id);
+      let grandTotal = total[0].total
+      let wallet = await userHelper.getWalletAmount(req.session.user._id)
+      const products = await userHelper.getCartProducts(req.session.user._id);
       res.render("userview/checkout", {
         loggedIn,
         cartCount,
         userAddress,
         grandTotal,
         products,
+        wallet
       });
-    });
+    } catch (err) {
+      console.error(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   addAddressPost: (req, res) => {
@@ -201,14 +347,15 @@ module.exports = {
       userHelper.updateAddress(req.body, req.session.user._id);
       userHelper.findUserId(req.session.user._id).then((user) => {
         req.session.user = user;
-        res.render("/checkout-page");
+        res.redirect("/checkout-page");
       });
     } catch (error) {
       console.log(error);
+      res.render("error", { message: 'An Error Occured' })
     }
   },
 
-  addNewAddress: (req,res)=>{
+  addNewAddress: (req, res) => {
     try {
       userHelper.updateAddress(req.body, req.session.user._id);
       userHelper.findUserId(req.session.user._id).then((user) => {
@@ -217,98 +364,173 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
+      res.render("error", { message: 'An Error Occured' })
     }
   },
 
-  placeOrderPost: async(req, res) => {
-      const address = await userHelper.getUserAddress(req.session.user._id,req.body.addressId);
+  deleteAddress: async(req,res)=>{
+    try {
+      let loggedIn = req.session.user;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let addressId = req.params.id
+      let userId = req.session.user._id
+      userHelper.deleteAddress(addressId,userId).then(()=>{
+        res.render('userview/user-profile',{loggedIn,cartCount})
+      })
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
+  },
+
+  placeOrderPost: async (req, res) => {
+    try {
+      const address = await userHelper.getUserAddress(
+        req.session.user._id,
+        req.body.addressId
+      );
+      let coupon = req.body.coupon
       let payment = req.body.paymentMethod;
       let products = await userHelper.getCartList(req.session.user._id);
-       let grandTotal = await userHelper.getTotalAmount(req.session.user._id);
-       console.log(grandTotal);
-      userHelper.placeOrder(
-          address,
-          products,
-          grandTotal,
-          payment,
-          req.session.user._id,
-        )
-        .then((orderId) => {
-          if (req.body["paymentMethod"] == "Cash on delivery") {
-            res.json({ codSuccess: true });
-          } else {
-            userHelper
-              .generateRazorpay(orderId, grandTotal)
-              .then((response) => {
-                res.json(response);
-              });
-          }
-        });
+      let grandTotal = await userHelper.getTotalAmount(req.session.user._id);
+      let total, discount;
+      if (coupon) {
+        let cpn = await productHelper.getCoupon(coupon)
+        discount = parseInt(cpn[0].discount)
+        console.log(discount);
+        total = grandTotal[0].total - discount
+      } else {
+        total = grandTotal[0].total
+      }
+      const orderId = await userHelper.placeOrder(
+        address,
+        products,
+        total,
+        payment,
+        coupon,
+        req.session.user._id,
+        discount
+      );
+      if (req.body["paymentMethod"] == "Cash on delivery") {
+        res.json({ codSuccess: true });
+      } else if(req.body["paymentMethod"] == "Wallet"){
+        await userHelper.updateWallet( req.session.user._id,total)
+        res.json({walletPayment: true});
+      } else {
+        const response = await userHelper.generateRazorpay(orderId, total);
+        res.json(response);
+      }
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   getOrders: async (req, res) => {
-    let loggedIn = req.session.user;
-    let cartCount = await userHelper.getCartCount(req.session.user._id);
-    let orders = await productHelper.getOrderDetails(req.session.user._id);
-    res.render("userview/orders", { loggedIn, cartCount, orders });
+    try {
+      let loggedIn = req.session.user;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let orders = await productHelper.getOrderDetails(req.session.user._id);
+      let orderCount = await userHelper.getOrderCount(req.session.user._id)
+      res.render("userview/orders", { loggedIn, cartCount, orders, orderCount });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   getOrderedPro: async (req, res) => {
-    let loggedIn = req.session.user;
-    let cartCount = await userHelper.getCartCount(req.session.user._id);
-    let products = await productHelper.orderProductDetail(req.params.id);
-    let order = await productHelper.findOrder(req.params.id);
-    res.render("userview/orderedProduct", {
-      loggedIn,
-      cartCount,
-      products,
-      order,
-    });
+    try {
+      let loggedIn = req.session.user;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let products = await productHelper.orderProductDetail(req.params.id);
+      let order = await productHelper.findOrder(req.params.id);
+      res.render("userview/orderedProduct", {
+        loggedIn,
+        cartCount,
+        products,
+        order,
+      });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   returnOrder: async (req, res) => {
-    let orderId = req.params.id;
-    await productHelper.returnProduct(orderId).then(() => {
+    try {
+      let orderId = req.params.id;
+      await productHelper.returnProduct(orderId);
       res.redirect("/orders");
-    });
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   cancelOrder: async (req, res) => {
-    let orderId = req.params.id;
-    await productHelper.cancelOrder(orderId).then(() => {
-      res.redirect("/orders");
-    });
+    try {
+      let orderId = req.params.id;
+      let totalAmount = await userHelper.totalAmount(orderId)
+      let userId = req.session.user._id
+      let paymentMethod = await userHelper.getPaymentMethod(orderId)
+      if (paymentMethod == 'Razorpay' || paymentMethod == 'Wallet') {
+        userHelper.toWallet(userId, totalAmount)
+        await productHelper.cancelOrder(orderId);
+        res.redirect("/orders");
+      } else {
+        await productHelper.cancelOrder(orderId);
+        res.redirect("/orders");
+      }
+    } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
   razorpayPayment: (req, res) => {
-    console.log(req.body);
-    userHelper.verifyPayment(req.body).then(()=>{
-      userHelper.changePaymentStatus(req.body['order[receipt]']).then(()=>{
-        res.json({status:true})
+    try {
+      console.log(req.body);
+      userHelper.verifyPayment(req.body).then(() => {
+        userHelper.changePaymentStatus(req.body['order[receipt]']).then(() => {
+          res.json({ status: true })
+        })
+      }).catch((err) => {
+        console.log(err);
+        res.json({ status: false })
       })
-    }).catch((err)=>{
+    } catch (err) {
       console.log(err);
-      res.json({status:false})
-    })
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  getEditAddress: async(req,res)=>{
-    let loggedIn = req.session.user;
-    let cartCount =await userHelper.getCartCount(req.session.user._id);
-    let userAddress = await userHelper.getUserAddress(req.session.user._id,req.params.id)
-    res.render("userview/edit-address",{loggedIn,cartCount,userAddress})
+  getWishlist: async (req, res) => {
+    try {
+      let loggedIn = req.session.user;
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      res.render('userview/wishlist', { loggedIn, cartCount })
+    } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
   },
 
-  editAddressPost: (req,res)=>{
-    userHelper.editAddress(req.session.user._id,req.body,req.params.id).then(()=>{
-      res.redirect('/user-profile')
-    })
-  },
-
-  getWishlist: async(req,res)=>{
-    let loggedIn = req.session.user;
-    let cartCount = await userHelper.getCartCount(req.session.user._id);
-    res.render('userview/wishlist',{loggedIn,cartCount})
+  applyCoupon: async (req, res) => {
+    try {
+      console.log(req.body);
+      await productHelper.applyCoupon(req.body.couponCode, req.body.userId).then((response) => {
+        if (response.status) {
+          let total = req.body.total - response.discount
+          res.json({ total, discount: response.discount })
+        } else {
+          console.log("invalid coupon")
+          res.json({ status: false })
+        }
+      })
+    } catch (error) {
+      console.log(error);
+      res.render("error", { message: 'An Error Occured' })
+    }
   }
-
 }

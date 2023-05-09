@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb')
 const db = require('../config/connection')
 const collection = require('../models/collection')
 const bcrypt = require('bcrypt')
-const { response } = require('../app')
+const { response, use } = require('../app')
 const Razorpay = require('razorpay')
 const crypto = require('crypto')
 const instance = new Razorpay({
@@ -16,11 +16,21 @@ module.exports = {
 
     doSignup: (userData) => {
         return new Promise(async (res, rej) => {
-            userData.status = true
-            userData.password = await bcrypt.hash(userData.password, 10)
-            db.get().collection(collection.USER).insertOne(userData)
-            res(userData)
-
+            let emailExist = await db.get().collection(collection.USER).findOne({ email:userData.email })
+            let phoneExist = await db.get().collection(collection.USER).findOne({phone:userData.phone})
+            if(emailExist){
+                res({status:false,message:'This email is already registered...!!'})
+            } else if ( phoneExist ) {
+                res({status:false,message:'This mobile number is already registered...!!'})
+            }else{
+                userData.wallet = 0
+                userData.status = true
+                userData.password = await bcrypt.hash(userData.password, 10)
+                db.get().collection(collection.USER).insertOne(userData)
+                res({status:true,userData})
+    
+            }
+         
         })
     },
 
@@ -55,17 +65,17 @@ module.exports = {
                         } else {
 
                             console.log('erorr login');
-                            res({ status: false })
+                            res({ status: false ,message:"Invalid Username Or Password"})
                         }
                     })
                 } else {
                     console.log('Blocked User');
                     response.unblocked = false
-                    res({ status: true, response })
+                    res({ status: false, message:"You Are Blocked...!!" })
                 }
             } else {
                 console.log('no user available');
-                res({ status: false })
+                res({ status: false ,message:"No User Available"})
 
             }
 
@@ -82,6 +92,11 @@ module.exports = {
     findAllUser: async (skip, pageSize) => {
         let allUsers = await db.get().collection(collection.USER).find().skip(skip).limit(pageSize).toArray()
         return allUsers
+    },
+
+    getUser: async(userId)=>{
+        let user = await db.get().collection(collection.USER).find({_id: ObjectId(userId)}).toArray()
+        return user
     },
 
     findUserCount: async () => {
@@ -257,6 +272,21 @@ module.exports = {
         })
     },
 
+    getOrderCount: (userId) => {
+        
+        return new Promise(async (res, rej) => {
+            let count = 0
+            let order = await db.get().collection(collection.ORDERS).find({ userId: ObjectId(userId)}).toArray()
+         
+            if (order) {
+                count = order.length
+            }
+            
+            res(count)
+            
+        })
+    },
+
     changeProductQuantity: (details) => {
         details.count = parseInt(details.count)
         details.quantity = parseInt(details.quantity)
@@ -326,9 +356,9 @@ module.exports = {
         })
     },
 
-    placeOrder: (order, products, grandTotal, payment, userId) => {
+    placeOrder: (order, products, grandTotal, payment, coupon, userId, discount) => {
         return new Promise((res, rej) => {
-            let status = order.paymentMethod === 'Cash on delivery' ? 'placed' : 'pending'
+           
             let orderObj = {
                 deliveryAddress: {
                     name: order.name,
@@ -341,12 +371,15 @@ module.exports = {
                 userId: ObjectId(userId),
                 paymentmethod: payment,
                 products: products,
-                status: status,
                 orderstatus: 'placed',
+                coupon:discount,
                 totalPrice: grandTotal,
                 date: Date.now()
             }
-
+            if( coupon ){ 
+                db.get().collection(collection.COUPONS).updateOne({ couponCode: coupon },{$pull: {user: ObjectId(userId)}})
+                db.get().collection(collection.COUPONS).updateOne({ couponCode: coupon },{$push: {user: ObjectId(userId)}})
+            }
             db.get().collection(collection.ORDERS).insertOne(orderObj).then((response) => {
                 db.get().collection(collection.CART_COLLECTION).deleteOne({ user: ObjectId(userId) })
                 res(response.insertedId)
@@ -372,8 +405,33 @@ module.exports = {
                         }
                     }
                 )
+                
             resolve(address.address[0]);
         })
+    },
+
+    getAllAddress : async(userId)=>{
+        let address = await db.get().collection(collection.USER).aggregate(
+            [
+                {
+                    $match:{
+                       _id: new ObjectId(userId)
+                    }
+                },
+                {
+                    $unwind:{
+                        path:'$address'
+                    }
+                },
+                {
+                    $project:{
+                        _id:0,
+                        address:1
+                    }
+                }
+            ]
+        ).toArray()
+        return address
     },
 
     editAddress:(userId,addDetails,addressId)=>{
@@ -397,6 +455,33 @@ module.exports = {
                 res(response)
             })
         })
+    },
+
+    deleteAddress: async(addressId,userId)=>{
+        await db.get().collection(collection.USER)
+        .updateOne(
+            {_id: ObjectId(userId)},
+            {$pull:{address:{_id: ObjectId(addressId)}}}
+        )
+    },
+
+    editUser: async(userId,userData)=>{
+        userData.status = true
+        userData.password = await bcrypt.hash(userData.password, 10)
+        let user = await db.get().collection(collection.USER).updateOne(
+            {
+                _id:ObjectId(userId)
+            },
+            {
+                $set:{
+                    name:userData.name,
+                    password:userData.password,
+                    phone:userData.phone,
+                    email:userData.email
+                }
+            }
+        )
+        return user
     },
 
     getTotalAmount: (userId) => {
@@ -436,9 +521,27 @@ module.exports = {
                 }
             ]).toArray()
 
-            console.log(total);
-            resolve(total[0].total)
-        })
+            resolve(total)
+        })  
+    },
+
+    getWalletAmount: async(userId)=>{
+        let wallet = await db.get().collection(collection.USER).
+        aggregate([
+            {
+                '$match':{
+                    '_id': ObjectId(userId)
+                }
+            },
+            {
+                '$project': {
+                    '_id': 0,
+                    'wallet': 1
+                }
+            }
+        ]).toArray()
+
+        return wallet[0].wallet
     },
 
     generateRazorpay: (orderId, total) => {
@@ -491,6 +594,93 @@ module.exports = {
                 }
             })
             return result
+    },
+
+    totalAmount: async (orderId) => {
+        console.log(orderId);
+        const total = await db.get().collection(collection.ORDERS)
+            .aggregate([
+                {
+                    '$match': {
+                        '_id': ObjectId(orderId)
+                    }
+                },
+                {
+                    '$group': {
+                        '_id': null,
+                        'totalPrice': { $sum: '$totalPrice' } 
+                    }
+                },
+                {
+                    '$project': {
+                        '_id': 0,
+                        'totalPrice': 1
+                    }
+                }
+            ])
+            .toArray();
+    
+        return total[0].totalPrice
+    },
+
+    orderUser: async(orderId)=>{
+        let user = await db.get().collection(collection.ORDERS)
+        .aggregate([
+            {
+                '$match': {
+                    '_id': ObjectId(orderId)
+                }
+            },
+            {
+                '$project': {
+                    '_id': 0,
+                    'userId': 1
+                }
+            }
+        ]).toArray()
+        return user[0].userId
+    },
+
+    toWallet: async(userId,totalAmount)=>{
+        await db.get().collection(collection.USER).updateOne(
+            {
+                _id:ObjectId(userId)
+            },
+            {
+                $inc:{
+                    wallet:totalAmount
+                }
+            })
+    },
+
+    updateWallet: async(userId,totalAmount)=>{
+        await db.get().collection(collection.USER).updateOne(
+            {
+                _id:ObjectId(userId)
+            },
+            {
+                $inc:{
+                    wallet:-totalAmount
+                }
+            })
+    },
+
+    getPaymentMethod: async(orderId)=>{
+        let payment = await db.get().collection(collection.ORDERS).aggregate([
+            {
+                '$match': {
+                    '_id': ObjectId(orderId)
+                }
+            },
+            {
+                '$project': {
+                    '_id': 0,
+                    'paymentmethod': 1
+                }
+            }
+        ]).toArray()
+
+        return payment[0].paymentmethod
     }
 
 } 

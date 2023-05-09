@@ -1,0 +1,167 @@
+
+<br>
+<br>
+<br>
+<br>
+<main class="main">
+    
+    <section class="pt-50 pb-150">
+        <div class="container mt-5 mb-5">
+            <div class="row">
+                <div class="col-lg-6 m-auto">
+                    <div class="row">
+                        
+                        <div class="col-md-12">
+                            <div class="tab-content dashboard-content">
+                                
+                                
+                                <div class="tab-pane active" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Edit User</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            
+                                            <form action="/edit-user/<%=user._id%>" method="post">
+                                                
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label>Name <span class="required">*</span></label>
+                                                        <input value="<%=user.name%>" id="typeUsernameX-2" class="form-control square" name="name" type="text">
+                                                        <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Phone Number <span class="required">*</span></label>
+                                                        <input  class="form-control square" id="typeNumberX-2" value="+91<%=user.phone%>" name="phone" type="tel">
+                                                        <span id="number-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Email <span class="required">*</span></label>
+                                                        <input  class="form-control square" id="typeEmailX-2" value="<%=user.email%>" name="email" type="email">
+                                                        <span id="email-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Password<span class="required">*</span></label>
+                                                        <input  class="form-control square" id="typePasswordX-2" placeholder="Password" name="password"  type="password">
+                                                        <span id="password-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Confirm Password<span class="required">*</span></label>
+                                                        <input  class="form-control square" id="typeConfirmPassword" placeholder="Confirm Password" name="password"  type="password">
+                                                        <span id="confirm-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-12 ">
+                                                        <button type="submit" class="btn btn-primary submit" onclick="return validateForm()">Save</button>
+                                                        <span style="color: red;" id="submit-error"></span>
+                                                    </div>
+                                                </div>
+                                                
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+
+<script>
+    const nameError = document.getElementById("name-error");
+    const emailError = document.getElementById("email-error");
+    const passwordError = document.getElementById("password-error");
+    const submitError = document.getElementById("submit-error");
+    const numberError = document.getElementById("number-error")
+    const confirmError = document.getElementById('confirm-error')
+
+    function validateName() {
+      var name = document.getElementById("typeUsernameX-2").value;
+      if (name.length == 0) {
+        nameError.innerHTML = "Name is required";
+        return false;
+      }
+      if (!name.match(/^[A-Za-z]+ [A-Za-z]+$/)) {
+        nameError.innerHTML = "Write full name";
+        return false;
+      }
+      nameError.innerHTML = "";
+      return true;
+    }
+
+    function validateEmail() {
+      var email = document.getElementById("typeEmailX-2").value;
+      if (email.length == 0) {
+        emailError.innerHTML = "Email is required";
+        return false;
+      }
+      if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+        emailError.innerHTML = "Email invalid";
+        return false;
+      }
+      emailError.innerHTML = "";
+      return true;
+    }
+
+    function validatePassword() {
+      var password = document.getElementById("typePasswordX-2").value;
+      if (password.length == 0) {
+        passwordError.innerHTML = "Password must contain atleast 6 characters";
+        return false;
+      }
+      var passChecker = /^(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+      if (password.match(passChecker)) {
+        passwordError.innerHTML = "";
+        return true;
+      } else {
+        passwordError.innerHTML = "Password must contain atleast 1 uppercase letter";
+        return false;
+      }
+    }
+
+    function validateConfirmPassword(){
+      let password = document.getElementById('typePasswordX-2').value
+      let confirmPassword = document.getElementById('typeConfirmPassword').value
+      if (confirmPassword == "") {
+          confirmError.innerText = "This field is required";
+          return false;
+        }else if(password != confirmPassword){
+        confirmError.innerText = "Password doesnt match"
+        return false;
+      }else{
+        return true
+      }
+    }
+
+    function validatePhonenumber(){
+      const mobileValue = document.getElementById("typeNumberX-2").value;
+      if (mobileValue == "") {
+          numberError.innerText = "This field is required";
+          return false;
+        } else if (!mobileValue.match(/^(\+91|0)?[6-9]\d{9}$/)) {
+          numberError.innerText = "Enter a valid mobile number";
+          return false;
+        }
+        // The mobile number is valid
+        numberError.innerText = "";
+        return true;
+    }
+
+    function validateForm() {
+      if (!validateName() || !validateEmail() || !validatePassword() || !validatePhonenumber() || !validateConfirmPassword()) {
+        submitError.style.display = "flex";
+        submitError.style.justifyContent = "center";
+        submitError.innerHTML = "Please enter the details properly";
+        setTimeout(() => {
+          submitError.style.display = "none";
+        }, 3000);
+        return false;
+      }
+    }
+  </script>

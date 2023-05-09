@@ -46,6 +46,8 @@ router.get('/unblock-user/:id',middlewares.verifyAdminLogin,admincontroller.unbl
 
 router.get('/order-details',middlewares.verifyAdminLogin,admincontroller.getOrderDetails)
 
+router.get('/salesreport',middlewares.verifyAdminLogin,admincontroller.getSalesReport)
+
 router.get('/ship-product/:id',middlewares.verifyAdminLogin,admincontroller.shipProduct)
 
 router.get('/deliver-product/:id',middlewares.verifyAdminLogin,admincontroller.deliverProduct)
@@ -54,5 +56,14 @@ router.get('/return-product/:id',middlewares.verifyAdminLogin,admincontroller.re
 
 router.get('/graph-statics',middlewares.verifyAdminLogin,admincontroller.graphStatics)
 
+router.get('/view-order/:id',middlewares.verifyAdminLogin,admincontroller.orderViewPage)
+
+router.route('/banners')
+.get(middlewares.verifyAdminLogin,admincontroller.getBanners)
+.post(upload.single('image'),admincontroller.addBanner)
+
+router.route('/coupons')
+.get(middlewares.verifyAdminLogin,admincontroller.getCoupons)
+.post(admincontroller.addCouponPost)
 
 module.exports = router;

@@ -2,6 +2,7 @@ const db = require('../config/connection')
 const collection = require('../models/collection')
 const { response } = require('../app');
 const { ObjectId }= require('mongodb');
+const adminHelpers = require('./admin-helpers');
 // var objectId = require('mongodb').ObjectID
 
 module.exports={
@@ -56,8 +57,9 @@ module.exports={
     },
 
     getProductDetails: (proId)=>{
+        console.log(proId);
         return new Promise((res,rej)=>{
-            db.get().collection(collection.PRODUCT).findOne({_id:ObjectId(proId)}).then((product)=>{
+            db.get().collection(collection.PRODUCT).findOne({_id: ObjectId(proId)}).then((product)=>{
                 res(product)
             })
         })
@@ -71,16 +73,6 @@ module.exports={
     productCount: async()=>{
         let countProducts = await db.get().collection(collection.PRODUCT).countDocuments()
         return countProducts
-    },
-
-    addCategory : (category)=>{
-        category.status = true
-        return new Promise((res,rej)=>{
-            db.get().collection(collection.PRODUCT_CATEGORY).insertOne(category).then((data)=>{
-                res(data.insertedId)
-            })
-        })
-        
     },
 
     editCategory: async(newCategory,catId)=>{
@@ -101,6 +93,12 @@ module.exports={
           let products = await db.get().collection(collection.PRODUCT).find().toArray()
           res(products)
       })
+      },
+
+      addCategory: async(category)=>{
+        category.status = true
+        let cat = await db.get().collection(collection.PRODUCT_CATEGORY).insertOne(category)
+        return cat
       },
 
     getAllCategory : ()=>{
@@ -159,9 +157,9 @@ module.exports={
         })
     },
 
-    getAllOrders: async()=>{
-        let orders = await db.get().collection(collection.ORDERS).find().toArray()
-        return orders
+    getAllOrders: async() => {
+        let orders = await db.get().collection(collection.ORDERS).find().sort({date: -1}).toArray();
+        return orders;
     },
 
     getOrderDetails: async(userid)=>{
@@ -215,7 +213,7 @@ module.exports={
       },
 
       findOrder: async(orderId)=>{
-        let order = await db.get().collection(collection.ORDERS).find({_id:new ObjectId(orderId)}).toArray()
+        let order = await db.get().collection(collection.ORDERS).find({_id:new ObjectId(orderId)}).sort({date: -1}).toArray()
         return order
       },
 
@@ -262,6 +260,77 @@ module.exports={
                 res(response)
             })
         })
+    },
+
+    addCoupon: async(data)=>{
+        let coupons = await db.get().collection(collection.COUPONS).insertOne(data)
+        return coupons
+    },
+
+    getAllCoupons: async ()=>{
+        let allCoupons = await db.get().collection(collection.COUPONS).find().toArray()
+        return allCoupons
+    },
+
+    applyCoupon: (couponCode, userId) => {
+        return new Promise(async (resolve, reject) => {
+            let checkCoupon = await db.get().collection(collection.COUPONS).find({ couponCode: couponCode }).toArray();
+            console.log(checkCoupon);
+            if (checkCoupon.length > 0) {
+                let today = new Date();
+                let expiryDate = new Date(checkCoupon[0].expiryDate);
+                let user = await db.get().collection(collection.COUPONS)
+                    .aggregate([
+                        {
+                            $match: { couponCode: couponCode }
+                        },
+                        {
+                            $match: { user: { $in: [ObjectId(userId)] } }
+                        }
+                    ]).toArray();
+                if (user.length == 0) {
+                    if (expiryDate >= today) {
+                        db.get().collection(collection.COUPONS).updateOne({ couponCode: couponCode },{$push: {user: ObjectId(userId)}})
+                        console.log("date checked-----");
+                        let discount = checkCoupon[0].discount;
+                        let cpp = { status: true, discount };
+                        resolve(cpp);
+                    } else {
+                        console.log("coupon expired -----");
+                        resolve({ status: false });
+                    }
+                } else {
+                    console.log("user found -----");
+                    resolve({ status: false });
+                }
+            } else {
+                console.log("invalid code -----");
+                resolve({ status: false });
+            }
+        });
+    },
+
+    getCoupon: async(couponCode)=>{
+        let checkCoupon = await db.get().collection(collection.COUPONS).find({ couponCode: couponCode }).toArray();
+        return checkCoupon
+    },
+
+    addBanner: async(data)=>{
+        data.status = true
+        let banner = await db.get().collection(collection.BANNERS).insertOne(data)
+        return banner
+    },
+
+    addBannerImg: (bannerId,img)=>{
+        db.get().collection(collection.BANNERS).updateOne({_id:bannerId},
+            {
+                $set:{image:img}
+            })
+    },
+
+    getAllBanners: async ()=>{
+        let allBanners = await db.get().collection(collection.BANNERS).find().toArray()
+        return allBanners
     }
     
 }

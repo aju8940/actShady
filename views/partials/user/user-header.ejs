@@ -1,91 +1,11 @@
-<!-- <header>
-	Header desktop
-	<section>
-		<div class="container-menu-desktop">
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				
-				Logo desktop		
-				<a href="#" class="logo">
-					<img src="userAssets/images/icons/logo-01.png" alt="IMG-LOGO">
-				</a>
-
-				Menu desktop
-				<div class="menu-desktop">
-					<ul class="main-menu">
-						<li class="active-menu">
-							<a href="/">Home</a>
-						</li>
-
-						<div class="dropdown">
-							<button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							  Categories
-							</button>
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-							  <a class="dropdown-item" href="/products/men">Men</a>
-							  <a class="dropdown-item" href="/products/women">Women</a>
-							</div>
-						  </div>
-
-						<li>
-							<a href="about.html">About</a>
-						</li>
-
-						<li>
-							<a href="contact.html">Contact</a>
-						</li>
-					</ul>
-				</div>	
-
-				Icon header
-				<div class="wrap-icon-header flex-w flex-r-m p-r-8">
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-						<i class="zmdi zmdi-search"></i>
-					</div>
-
-					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-						<i class="zmdi zmdi-shopping-cart"></i>
-					</div>
-
-					<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-						<i class="zmdi zmdi-favorite-outline"></i>
-					</a>
-				</div>
-
-				<% if (locals.user) { %>
-					<div class="dropdown">
-						<button class="btn btn-success btn-sm  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						  <%= user.name %>
-						</button>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						  <a class="dropdown-item" href="#">Wishlist</a>
-						  <a class="dropdown-item" href="#">Cart</a>
-						  <a class="dropdown-item" href="/logout">Logout</a>
-						</div>
-					</div>
-				<% } else { %>
-					<div class="dropdown">
-						<button class="btn btn-success btn-sm  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						  Account
-						</button>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						  <a class="dropdown-item" href="/login">Login</a>
-						  <a class="dropdown-item" href="/signup">Signup</a>
-						</div>
-					</div>
-				<% } %>
-					
-			</nav>
-		</div>
-		</section>
-</header> -->
 
 
 <!-- Header -->
 <header>
 	<!-- Header desktop -->
-	<div class="container-menu-desktop">
+	<div class="container-menu-desktop ">
 		<div class="wrap-menu-desktop ">
-			<nav class="limiter-menu-desktop p-5">
+			<nav class="limiter-menu-desktop p-5 ">
 
 				<!-- Logo desktop -->
 				<a href="#" class="logo mr-4"> 
@@ -94,7 +14,7 @@
 				</a>
 
 				<!-- Menu desktop -->
-				<div class="menu-desktop">
+				<div class="menu-desktop ">
 					<ul class="main-menu ">
 						<li class="">
 							<a href="/">Home</a>
@@ -104,7 +24,7 @@
 							<a href="/shop">Shop</a>
 						</li>
 
-						<li>
+						<!-- <li>
 							<a href="about.html" class="dropdown-toggle" data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="#">Men</a>
@@ -113,7 +33,7 @@
 								<a class="dropdown-item" href="#">Unisex</a>
 								<a class="dropdown-item" href="#">Sports</a>
 							</div>
-						</li>
+						</li> -->
 
 						<li>
 							<a href="/orders">Orders</a>
@@ -186,7 +106,7 @@
 							id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false" style="font-size: large;">Account</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="/user-profile">Account</a>
+								
 								<a class="dropdown-item" href="/login">Login</a>
 								<a class="dropdown-item" href="/signup">Signup</a>
 							</div>

@@ -31,11 +31,11 @@ router.get('/user-profile',middlewares.verifyLogin,usercontroller.getProfile)
 
 router.get('/shop',usercontroller.viewProducts)
 
-router.get('/product-details/:id',usercontroller.productDetails)
+router.get('/product-details',usercontroller.productDetails)
 
 router.get('/shopping-cart',middlewares.verifyLogin,usercontroller.viewShoppingCart)
 
-router.get('/add-to-cart/:id',middlewares.verifyLogin,usercontroller.addToCArt)
+router.get('/add-to-cart/:id',middlewares.verifyLogin,usercontroller.addToCart)
 
 router.post('/change-product-quantity',middlewares.verifyLogin,usercontroller.changeProQuantity)
 
@@ -63,8 +63,16 @@ router.get('/edit-address/:id',middlewares.verifyLogin,usercontroller.getEditAdd
 
 router.post('/edit-address/:id',middlewares.verifyLogin,usercontroller.editAddressPost)
 
+router.get('/delete-address/:id',middlewares.verifyLogin,usercontroller.deleteAddress)
+
+router.get('/edit-user/:id',middlewares.verifyLogin,usercontroller.getEditUser)
+
+router.post('/edit-user/:id',middlewares.verifyLogin,usercontroller.editUserPost)
+
 router.get('/wishlist',middlewares.verifyLogin,usercontroller.getWishlist)
 
 router.get('/add-to-wishlist/:id',middlewares.verifyLogin,usercontroller.addToWishlist)
+
+router.post('/apply-coupon',middlewares.verifyLogin,usercontroller.applyCoupon)
 
 module.exports = router;

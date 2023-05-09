@@ -20,8 +20,8 @@
                                 <span class="form-check-label">Remember</span>
                             </label>
                         </div> <!-- form-group form-check .// -->
-                        <% if(message) { %>
-                            <p style="color: red;"><%=message%></p>
+                        <% if(logErr) { %>
+                            <p style="color: red;"><%=logErr%></p>
                             <% } %>
 
                         <div class="mb-4">
@@ -93,4 +93,5 @@
                 return false;
             }
         }
+
     </script>

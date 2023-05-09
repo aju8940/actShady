@@ -23,10 +23,14 @@
 
 
 <!-- Shoping Cart -->
-<form method="post" id="checkout-form" action="/place-order" class="bg0 p-t-75 p-b-85">
-	<div class="container">
+
+
+
+
+<form method="post" id="checkout-form" action="/place-order" class="bg0 p-t-40 p-b-85">
+	<div class="container-fluid">
 		<div class="row">
-			<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+			<div class="col-lg-8 col-xl-7 m-lr-auto m-b-50">
 				<div class="m-l-25 m-r--38 m-lr-0-xl">
 
 					<div class="wrap-table-shopping-cart">
@@ -60,14 +64,14 @@
 								<% } %>
 						</table>
 
-
+						<% if ( userAddress.length > 0 ) { %>
 						<table class="table-shopping-cart">
 							<tr class="table_head">
 								<th class="column-1">Address</th>
 							</tr>
 
 
-							<% if ( userAddress ) { %>
+							
 								<tr class="table_row">
 									<td>
 										<% userAddress.forEach(user=> { %>
@@ -94,7 +98,7 @@
 													<p>
 														<label class="form-check-label" id="addressId"
 															name="homeAddress" for="addressId">
-															<%=user.phone%> , <%=user.city%> , <%=user.district%> ,
+															<%=user.housename%> , <%=user.city%> , <%=user.district%> ,
 																		<%=user.pincode%>
 														</label>
 
@@ -102,41 +106,17 @@
 												</div>
 											</label>
 											<% }) %>
-
-												<% } else { %>
-
-													<label
-														class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-2 border">
-														<div class="p-3">
-															<p> <b>
-
-																	<label class="form-check-label" for="addressId"
-																		name="user_name">
-
-																	</label>
-																</b></p>
-
-															<b class="">
-																<label class="form-check-label" name="phone"
-																	for="addressId">
-
-																</label>
-															</b>
-															<p>
-																<label class="form-check-label" id="addressId"
-																	name="homeAddress" for="addressId">
-
-																</label>
-
-															</p>
-														</div>
-													</label>
-													<% } %>
-									</td>
-								</tr>
+										</td>
+									</tr>
+											
+									
 						</table>
-					</div>
+						<% } else { %>
 
+													
+							<% } %>
+					</div>
+					
 
 				</div>
 				<a href="#" data-toggle="modal" data-target="#address123" class="btn btn-dark mb-4 hov-btn3 mt-4 ml-4"
@@ -157,24 +137,34 @@
 							</span>
 						</div>
 
+						
+
+						
 						<div class="size-209">
 							<span class="mtext-110 cl2">
-								<%= grandTotal %>
+								Rs <%= grandTotal %>
 							</span>
 						</div>
 					</div>
+					
 
-					<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
-						<div class="flex-w flex-m m-r-20 m-tb-5">
-							<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text"
-								name="coupon" placeholder="Coupon Code">
+					<div class="col-lg-10 mt-4">
+	<div class="toggle_info">
+		<span><i class="fi-rs-label mr-10"></i><span class="text-dark">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here</a></span>
+	</div>
+	<div class="panel-collapse collapse coupon_form " id="coupon">
+		<div class="panel-body mt-3">
+			
+				<div class="form-group ">
+					<input type="text" class="form-control" name="coupon" placeholder="Enter Coupon"  id="applyCoupon" style="border-radius: 2rem; background-color: rgb(221, 221, 221); max-width: 250px;">                                    
+					<div class="btn btn-dark btn-sm mt-3" type="submit" onclick="applyCoupon('<%= loggedIn._id %>')" style="border-radius: 2rem;" name="login">Apply Coupon</div>
+				</div>
+			
+		</div>
+	</div>
+</div>
+					
 
-							<div
-								class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-								Apply coupon
-							</div>
-						</div>
-					</div>
 					<hr style="border: 1px dashed;">
 
 					<div class="flex-w flex-t p-t-27 p-b-33">
@@ -185,34 +175,69 @@
 						</div>
 
 						<div class="size-209 p-t-1">
-							<span class="mtext-110 cl2" name="total-price">
-								<%= grandTotal %>
+							<span class="mr-1 mtext-110 cl2">Rs</span>
+							<span class="mtext-110 cl2" id="totalAmount" name="total-price">
+								 <%= grandTotal %>
 							</span>
 						</div>
 					</div>
 
 					<hr style="border: 1px dashed;">
 
-					<div class="mb-5">
+					<div class="mb-4">
 
 						<h4 class="mtext-109 cl2 p-b-30">
 							Payments
 						</h4>
 
+						
+					
+
 						<label class="radio-inline ">
 							<h5><input type="radio" checked required name="paymentMethod" value="Cash on delivery"
 									class="float-left mr-4 mt-1">Cash on delivery</h5>
 						</label>
-
+<br>
 						<label class="radio-inline ">
 							<h5><input type="radio" required name="paymentMethod" value="Razorpay"
 									class="float-left mr-4 mt-1">Razorpay</h5>
 						</label>
 
+						<% if ( wallet < grandTotal ) { %>
+
+							<label class="d-flex radio-inline ">
+								<h5><input type="radio" checked required name="paymentMethod" value="Wallet"
+										disabled class="float-left mr-4 mt-1">Wallet</h5><h6 class="ml-2 pt-1 text-muted">( Balance : Rs <%= wallet %> )</h6>
+							</label>
+							<p class="text-danger">Insufficient balance in your wallet</p>
+	
+							<% } else { %>
+	
+							<label class="d-flex radio-inline ">
+								<h5><input type="radio" checked required name="paymentMethod" value="Wallet"
+										 class="float-left mr-4 mt-1">Wallet</h5><h6 class="ml-2 pt-1 text-muted">( Balance : Rs <%= wallet %> )</h6>
+							</label>
+	
+							<% } %>
+
 					</div>
+
+					
+
+					<% if ( userAddress.length > 0 ) { %>
 
 					<button class="btn flex-c-m stext-101 cl0 ml-5 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
 						type="submit" onclick="placeOrder() ; event.preventDefault()">Place Order</button>
+
+						<% } else { %>
+
+						<button class="btn flex-c-m stext-101 cl0 ml-5 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
+						 disabled>Place Order</button>
+						 <br>
+						 <br>
+						 <p class="text-danger">Add address to place your order...!</p>
+
+						<% } %>
 				</div>
 
 
@@ -274,8 +299,8 @@
 							</div>
 
 							<div class=" col-md-6 col-lg-6 col-xl-6 required mb-3">
-								<input type="text" required class="form-control form-control-md"
-									placeholder="District" name="district" style="border-radius: 1rem; width: 70%;" />
+								<input type="text" required class="form-control form-control-md" placeholder="District"
+									name="district" style="border-radius: 1rem; width: 70%;" />
 							</div>
 						</div>
 						<div class="row">
@@ -298,26 +323,38 @@
 
 <script>
 	function placeOrder() {
-		Swal.fire(
-			'Order Placed Successfull',
-			'success'
-		).then(() => { 
-
-			$.ajax({
-				url: '/place-order',
-				data: $('#checkout-form').serialize(),
-				method: 'post',
-				success: (response) => {
-					if (response.codSuccess) {
-						console.log(response);
-						window.location.href = '/orders'
-					} else {
-						razorpayPayment(response)
-					}
+		let couponCode = document.getElementById('applyCoupon').value
+		
+		$.ajax({
+			url: '/place-order',
+			data: $('#checkout-form').serialize(),couponCode,
+			method: 'post',
+			success: (response) => {
+				if (response.codSuccess) {
+					Swal.fire(
+						'Order Placed Successfull',
+						'success'
+					)
+					console.log(response);
+					window.location.href = '/orders'
+				} else if (response.walletPayment){
+					Swal.fire(
+						'Order Placed Successfull',
+						'success'
+					)
+					window.location.href = '/orders'
+				} else {
+					razorpayPayment(response)
+					Swal.fire(
+						'Order Placed Successfull',
+						'success'
+					)
+					window.location.href = '/orders'
 				}
-			})
-
+			}
 		})
+
+
 	}
 
 	function razorpayPayment(order) {
@@ -348,23 +385,58 @@
 		rzp1.open();
 	}
 
-	function verifyPayment(payment,order){
+	function verifyPayment(payment, order) {
 		$.ajax({
-			url:'/verify-payment',
-			data:{
+			url: '/verify-payment',
+			data: {
 				payment,
 				order
 			},
-			method:'post',
-			success:(response)=>{
-				if(response.status){
+			method: 'post',
+			success: (response) => {
+				if (response.status) {
 					console.log("ORDER SUCCESS");
 					location.href = "/"
-				}else{
+				} else {
 					alert("PAYMENT FAILED")
 				}
 			}
 		})
+	}
+
+	function applyCoupon(userId) {
+		let couponCode = document.getElementById('applyCoupon').value
+		let totalAmount = document.getElementById('totalAmount').innerHTML
+		let total = parseInt(totalAmount)
+
+		$.ajax({
+			url: '/apply-coupon',
+			data: {
+				couponCode,
+				total,
+				userId
+			},
+			method: 'post',
+			success: (response) => {
+				if (response.status == false) {
+					Swal.fire(
+						'Invalid Coupon',
+						'Failed'
+					)
+					
+					console.log(response);
+					
+				} else {
+					document.getElementById('totalAmount').innerHTML = response.total
+					Swal.fire(
+						'Coupon Applied Successfull',
+						'success'
+					)
+				}
+			}
+		})
+
+
 	}
 
 

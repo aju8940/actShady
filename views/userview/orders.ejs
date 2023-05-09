@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<% if (orders  ) { %>
+<% if (orderCount > 0  ) { %>
 
 <section class="container intro mt-5 mb-5">
   <div class="gradient-custom-1 h-100">
@@ -66,38 +66,39 @@
 
                       <% if (order.orderstatus==="delivered" ) { %>
 
-                        <td><button class="btn-info btn-sm" style="border-radius: 2rem;">View Product</button>
+                        <td><a class="btn-info btn-sm" href="/order-product-detail/<%=order._id%>" style="border-radius: 2rem;">View Product</a>
                           <button class="btn-danger btn-sm text-light"
                             onclick="returnOrder('<%=order._id%>'); event.preventDefault();"
                             style="border-radius: 2rem;">Return</button>
                         </td>
-                    </tr>
+                    
 
                     <% } else if (order.orderstatus==="order returned" ) { %>
 
-                      <td><button class="btn-info btn-sm" style="border-radius: 2rem;">View Product</button></td>
-                      </tr>
+                      <td><a class="btn-info btn-sm" href="/order-product-detail/<%=order._id%>" style="border-radius: 2rem;">View Product</a></td>
+                      
 
                       <% } else if (order.orderstatus==="return pending" ) { %>
 
-                        <td><button class="btn-info btn-sm" style="border-radius: 2rem;">View Product</button></td>
-                        </tr>
+                        <td><a class="btn-info btn-sm" href="/order-product-detail/<%=order._id%>" style="border-radius: 2rem;">View Product</a></td>
+                        
 
                         <% } else if (order.orderstatus==="order cancelled" ) { %>
 
-                          <td><button class="btn-info btn-sm" style="border-radius: 2rem;">View Product</button></td>
-                        </tr>
+                          <td><a class="btn-info btn-sm" href="/order-product-detail/<%=order._id%>" style="border-radius: 2rem;">View Product</a></td>
+                        
 
                         <% } else { %>
 
                           <td><a class="btn-info text-white btn-sm" href="/order-product-detail/<%=order._id%>" style="border-radius: 2rem;">View Product</a>
                             <button class="btn-danger btn-sm text-light" onclick="cancelOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 2rem;">Cancel</button>
                           </td>
-                          </tr>
+                          
 
                           <% } %>
 
                             <% } )%>
+                    </tr>
 
                 </tbody>
               </table>
@@ -108,6 +109,8 @@
     </div>
   </div>
 </section>
+
+
 
 
 <% } else { %>

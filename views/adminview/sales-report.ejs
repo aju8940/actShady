@@ -1,0 +1,56 @@
+<style>
+  body {
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial,
+      sans-serif;
+  }
+</style>
+
+<section class="content-main">
+  <div class="content-header">
+    <h2 class="content-title">Sales Report</h2>
+  </div>
+  <div class="card mb-4">
+    <!-- card-header end -->
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover" id="example">
+          <thead>
+            <tr>
+              <th>Order Id</th>
+              <th>Name</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+
+              <th>Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% orders.forEach(order=> { %> <% if
+            (order.orderstatus==="delivered" ) { %>
+            <tr>
+              <td><%=order._id%></td>
+              <td><%= order.deliveryAddress.name%></td>
+              <td>Rs <%=order.totalPrice%></td>
+              <td><%=order.paymentmethod%></td>
+
+              <td>
+                <%= new Date(order.date).toLocaleDateString('en-GB', { day:
+                '2-digit' , month: '2-digit' , year: 'numeric' }).replace(/\//g,
+                '-' )%>
+              </td>
+            </tr>
+            <% } else { %> <% } %> <% } )%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+</script>

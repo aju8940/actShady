@@ -5,8 +5,8 @@
 			<p>Whole data about your business here</p>
 		</div>
 		<div>
-			<a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create
-				report</a>
+			<a href="/admin/salesreport" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Sales
+				Report</a>
 		</div>
 	</div>
 	<div class="row">
@@ -100,23 +100,16 @@
 		success: function (response) {
 
 			console.log('this is respons2', response);
-
 			const ctx = document.getElementById('myChart');
-
 			let status2 = response.saleStatistics
-
 			// let salesStatus = [0,0,0,0,0,0,0,0,0,0,0,0]
 			let salesStatus = []
 
 			status2.forEach((item) => {
-
 				salesStatus[item._id - 1] = item.totalAmount
-
 			})
 
 			const monthNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-
 
 			new Chart(ctx, {
 				type: 'bar',

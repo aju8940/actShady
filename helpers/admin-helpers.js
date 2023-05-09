@@ -85,6 +85,17 @@ module.exports={
 
         ]).toArray()
         return total
-    }
+    },
+
+    isCategoryExist: async (name) => {
+        let category = await db.get().collection(collection.PRODUCT_CATEGORY).findOne({ category: name });
+        if (category) {
+          console.log('Category Already Exists:', category);
+          return true;
+        } else {
+          console.log('Category does not exist');
+          return false;
+        }
+      }
     
 }

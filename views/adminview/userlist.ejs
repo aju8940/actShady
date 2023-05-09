@@ -13,15 +13,17 @@
               <th>Email</th>
               <th>Mobileno</th>
               <th>Status</th>
-              <th class="text-end">Action</th>
+              <th>Action</th>
+              
             </tr>
           </thead>
           <tbody>
             <% users.forEach(user=> { %>
             <tr>
-              <td><%=user.name%></td>
+              <td ><%=user.name%></td>
               <td><%=user.email%></td>
               <td><%=user.phone%></td>
+  
               <td>
                 <% if ( user.status ) { %>
                 <span class="text-success">Active</span>

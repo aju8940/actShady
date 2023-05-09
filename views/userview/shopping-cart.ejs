@@ -20,7 +20,7 @@
         
 <!-- Shoping Cart -->
 <form class="bg0 p-t-75 p-b-85">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                 <div class="m-l-25 m-r--38 m-lr-0-xl">
@@ -60,7 +60,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="column-5" id="<%=products[i].product._id%>"><%=products[i].subtotal%></td>
+                                <td class="column-5" id="<%=products[i].product._id%>">Rs. <%=(products[i].product.price*products[i].quantity)%></td>
 
                                 <!-- <td class="column-5">Rs. <%=products[i].product.price%></td> -->
                                 <td><button class="btn btn-danger btn-sm text-light mr-3" onclick="removeProduct('<%=products[i]._id%>','<%=products[i].product._id%>'),event.preventDefault()">Delete</button></td>
@@ -87,23 +87,26 @@
                             </span>
                         </div>
 
-                        <div class="size-209">
-                            <span class="mtext-110 cl2" id="subtotal">
-                             <%= grandTotal %>
+                        <div class="size-209 d-flex">
+                            <span>Rs </span>
+                            <span class="mtext-110 cl2 ml-2" id="subtotal">
+                             <%= grandTotal[0].total %>
                             </span>
                         </div>
                     </div>
 
                     <div class="flex-w d-flex flex-t p-t-27 p-b-33">
-                        <div class="size-208">
-                            <span class="mtext-101 cl2">
+                        <div class="size-208 ">
+                            
+                            <span class="mtext-101 cl2 ">
                                 Total:
                             </span>
                         </div>
 
                         <div class="size-208">
-                            <span class="mtext-110 cl2" id="grandTotal">
-                                <%= grandTotal %>
+                            <span>Rs</span>
+                            <span class="mtext-110 cl2 ml-2" id="grandTotal">
+                                <%= grandTotal[0].total %>
                             </span>
                         </div>
                     </div>
@@ -235,9 +238,6 @@
                     grandTotal=parseInt(grandTotal)+price*count
                     document.getElementById('grandTotal').innerText = grandTotal
                     document.getElementById('subtotal').innerText = grandTotal
-                     console.log(document.getElementById(proId));
-
-
                 }else{
                     document.getElementById(proId).innerHTML=quantity+count
                 }

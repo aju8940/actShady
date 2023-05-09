@@ -7,7 +7,7 @@
 
 <section class="content-main">
   <div class="content-header">
-    <h2 class="content-title">Users</h2>
+    <h2 class="content-title">Orders</h2>
   </div>
   <div class="card mb-4">
     <!-- card-header end -->
@@ -22,7 +22,9 @@
               <th>Payment Method</th>
               <th>Status</th>
               <th>Date</th>
-              <th class="">Action</th>
+              <th>Order Details</th>
+              <th>Action</th>
+              
             </tr>
           </thead>
 
@@ -53,62 +55,66 @@
                     year: 'numeric'
                   }).replace(/\//g, '-')%>
                 </td>
+                <td><a href="/admin/view-order/<%=order._id%>" class="text-dark" style="text-decoration: none;">View Order</a></td>
 
                 <% if (order.orderstatus==="placed" ) { %>
 
                   <td class="dropdown">
-                    <button class="btn-sm btn-primary btn-sm" onclick="shipOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;"
+                    <a class="text-primary" onclick="shipOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;"
                       type="button">
                       Ship
-                    </button>
+                    </a>
                   </td>
 
                   <% } else if (order.orderstatus==="shipped" ) { %>
 
                     <td class="dropdown">
-                      <button class="btn-sm btn-success btn-sm" onclick="deliverOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;"
+                      <a class=" text-success" onclick="deliverOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;"
                         type="button">
                         Deliver
-                      </button>
+                      </a>
                     </td>
 
                     <% } else if (order.orderstatus==="delivered" ) { %>
 
                       <td class="dropdown">
-                        <button class="btn-sm btn-success btn-sm" 
-                          style="border-radius: 1rem ;" type="button">
+                        <p class="" 
+                          style="border-radius: 1rem ;" type="">
                           Delivered
-                        </button>
+                        </p>
                       </td>
 
                       <% } else if (order.orderstatus==="return pending" ) { %>
 
                         <td class="dropdown">
-                          <button class="btn-sm btn-danger btn-sm" onclick="returnOrder('<%=order._id%>'); event.preventDefault();"
+                          <a class=" text-danger" onclick="returnOrder('<%=order._id%>'); event.preventDefault();"
                             style="border-radius: 1rem ;" type="button">
                             Return
-                          </button>
+                          </a>
                         </td>
 
                         <% } else if (order.orderstatus==="order cancelled" ) { %>
 
                           <td class="dropdown">
-                            <button class="btn-sm btn-info btn-sm" 
-                              style="border-radius: 1rem ;" type="button">
+                            <p class="" 
+                              style="border-radius: 1rem ;" type="">
                               Order Cancelled
-                            </button>
+                            </p>
                           </td>
 
                         <% } else { %>
 
                           <td class="dropdown">
-                            <button class="btn-sm btn-info btn-sm" 
-                              style="border-radius: 1rem ;" type="button">
+                            <p class="" 
+                              style="border-radius: 1rem ;" type="">
                               Returned
-                            </button>
+                            </p>
                           </td>
 
                           <% } %>
+
+                          
+
 
               </tr>
 
@@ -119,6 +125,7 @@
       </div>
     </div>
   </div>
+</section>
 
 
 
