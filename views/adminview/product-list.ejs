@@ -76,6 +76,7 @@
                   <th>Category</th>
                   <th>Price</th>
                   <th>Description</th>
+                  <th>Stock</th>
                   <th>Image</th>
                   <th>Update</th>
                 </tr>
@@ -89,20 +90,21 @@
                     <td><%=pro.category%></td>
                     <td><%=pro.price%></td>
                     <td><%=pro.description%></td>
+                    <td><%=pro.stock%></td>
                     <td>
                       <img src="<%=pro.image[0]%>" alt="" srcset="" style="height: 60px; width: 60px;">
   
                     </td>
                     <td>
-                      <a  class="btn btn-brand rounded font-sm " href="/admin/edit-product/<%=pro._id%>">Edit</a>
+                      <a  class="btn btn-dark btn-sm font-sm " style="border-radius: 1rem;width: 60px;" href="/admin/edit-product/<%=pro._id%>">Edit</a>
                       
                       <% if ( pro.status ) { %>
 
-                        <a href="#" onclick="unlistProduct('<%=pro._id%>'); event.preventDefault();" class="btn btn-danger rounded font-sm">Unlist</a>
+                        <a href="#" onclick="unlistProduct('<%=pro._id%>'); event.preventDefault();" style="width: 60px;border-radius: 1rem;" class="btn btn-danger btn-sm  font-sm">Unlist</a>
 
                       <% } else { %>
 
-                        <a href="#" onclick="listProduct('<%=pro._id%>'); event.preventDefault();" class="btn btn-brand rounded font-sm">List</a>
+                        <a href="#" onclick="listProduct('<%=pro._id%>'); event.preventDefault();" style="width: 60px;border-radius: 1rem;" class="btn btn-success btn-sm  font-sm">List</a>
 
                       <% } %>
 
@@ -122,37 +124,7 @@
 
 
 
-    <!-- <div class="pagination-area mt-30 mb-50">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-start">
-                <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                <li class="page-item"><a class="page-link" href="#">02</a></li>
-                <li class="page-item"><a class="page-link" href="#">03</a></li>
-                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">16</a></li>
-                <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                </li>
-            </ul>
-        </nav>
-        </form>
-    </div> -->
 
-    <div class="pagination-area mt-15 mb-50 ">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-          <% if (currentPage > 1) { %>
-          <li class="page-item"><a class="page-link" href="?page=<%=currentPage-1%>"><i class="material-icons md-chevron_left"></i></a></li>
-          <% } %>
-          <% for (let i = 1; i <= totalPages; i++) { %>
-          <li class="page-item <% if (i === currentPage) { %>active<% } %>"><a class="page-link" href="?page=<%=i%>"><%=i%></a></li>
-          <% } %>
-          <% if (currentPage < totalPages) { %>
-          <li class="page-item"><a class="page-link" href="?page=<%=currentPage+1%>"><i class="material-icons md-chevron_right"></i></a></li>
-          <% } %>
-        </ul>
-      </nav>
-    </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>

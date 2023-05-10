@@ -64,11 +64,13 @@ module.exports = {
   homepageRender: async (req, res) => {
     try {
       const loggedIn = req.session.user;
+      let banner =  await userHelper.getBanner()
       if (req.session.user) {
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
         let cartCount = await userHelper.getCartCount(req.session.user._id);
-        res.render("userview/index", { loggedIn, cartCount });
+        res.render("userview/index", { loggedIn, cartCount, banner ,wishlistCount});
       } else {
-        res.render("userview/index");
+        res.render("userview/index", {banner});
       }
     } catch (error) {
       console.log(error);
@@ -157,7 +159,8 @@ module.exports = {
       let loggedIn = req.session.user;
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let userAddress = await userHelper.getAllAddress(req.session.user._id);
-      res.render("userview/user-profile", { loggedIn, cartCount, userAddress });
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+      res.render("userview/user-profile", { loggedIn, cartCount, userAddress ,wishlistCount});
     } catch (err) {
       console.log(err);
       res.render("error", { message: 'An Error Occured' })
@@ -171,7 +174,8 @@ module.exports = {
       let userId = user._id
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let userAddress = await userHelper.getUserAddress(req.session.user._id, req.params.id)
-      res.render("userview/edit-address", { loggedIn, userId, cartCount, userAddress })
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+      res.render("userview/edit-address", { loggedIn, userId, cartCount, userAddress, wishlistCount })
     } catch (error) {
       console.log(error);
       res.render("error", { message: "An error occurred" });
@@ -195,7 +199,8 @@ module.exports = {
       let user = await userHelper.findUserId(req.session.user._id)
       let userId = user._id
       let cartCount = await userHelper.getCartCount(req.session.user._id);
-      res.render("userview/edit-user", { loggedIn, userId, cartCount, user })
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+      res.render("userview/edit-user", { loggedIn, userId, cartCount, user, wishlistCount })
     } catch (error) {
       console.log(error);
       res.render("error", { message: "An error occurred" });
@@ -217,11 +222,11 @@ module.exports = {
     try {
       let loggedIn = req.session.user;
       let categories = await productHelper.getAllCategory()
-      console.log(categories);
       productHelper.getProducts().then(async (products) => {
         if (req.session.user) {
           let cartCount = await userHelper.getCartCount(req.session.user._id);
-          res.render("userview/shop", { loggedIn, products, cartCount, categories });
+          let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+          res.render("userview/shop", { loggedIn, products, cartCount, categories, wishlistCount });
         } else {
           res.render("userview/shop", { products, categories });
         }
@@ -239,10 +244,12 @@ module.exports = {
       productHelper.getProductDetails(req.query.id).then(async (product) => {
         if (req.session.user) {
           let cartCount = await userHelper.getCartCount(req.session.user._id);
+          let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
           res.render("userview/product-details", {
             loggedIn,
             product,
             cartCount,
+            wishlistCount
           });
         } else {
           res.render("userview/product-details", { product });
@@ -260,12 +267,13 @@ module.exports = {
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let products = await userHelper.getCartProducts(req.session.user._id);
       let grandTotal = await userHelper.getTotalAmount(req.session.user._id);
-      console.log(grandTotal, 'GRANDTOTAL');
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
       res.render("userview/shopping-cart", {
         products,
         loggedIn,
         cartCount,
         grandTotal,
+        wishlistCount
       });
     } catch (error) {
       console.log(error);
@@ -286,7 +294,7 @@ module.exports = {
 
   addToWishlist: (req, res) => {
     try {
-      userHelper.addWishlist(req.params.id, req.session.user._id).then(() => {
+      userHelper.addToWishlist(req.params.id, req.session.user._id).then(() => {
         res.redirect('/shop')
       });
     } catch (error) {
@@ -324,6 +332,7 @@ module.exports = {
       let loggedIn = req.session.user;
       const userAddress = req.session.user.address;
       let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
       let total = await userHelper.getTotalAmount(req.session.user._id);
       let grandTotal = total[0].total
       let wallet = await userHelper.getWalletAmount(req.session.user._id)
@@ -334,7 +343,8 @@ module.exports = {
         userAddress,
         grandTotal,
         products,
-        wallet
+        wallet,
+        wishlistCount
       });
     } catch (err) {
       console.error(err);
@@ -374,8 +384,9 @@ module.exports = {
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let addressId = req.params.id
       let userId = req.session.user._id
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
       userHelper.deleteAddress(addressId,userId).then(()=>{
-        res.render('userview/user-profile',{loggedIn,cartCount})
+        res.render('userview/user-profile',{loggedIn,cartCount,wishlistCount})
       })
     } catch (error) {
       console.log(error);
@@ -397,7 +408,6 @@ module.exports = {
       if (coupon) {
         let cpn = await productHelper.getCoupon(coupon)
         discount = parseInt(cpn[0].discount)
-        console.log(discount);
         total = grandTotal[0].total - discount
       } else {
         total = grandTotal[0].total
@@ -412,13 +422,18 @@ module.exports = {
         discount
       );
       if (req.body["paymentMethod"] == "Cash on delivery") {
+         userHelper.decStock(products)
         res.json({ codSuccess: true });
       } else if(req.body["paymentMethod"] == "Wallet"){
+        userHelper.decStock(products)
         await userHelper.updateWallet( req.session.user._id,total)
         res.json({walletPayment: true});
       } else {
-        const response = await userHelper.generateRazorpay(orderId, total);
-        res.json(response);
+        await userHelper.generateRazorpay(orderId, total).then((response)=>{
+          userHelper.decStock(products)
+          res.json(response);
+        })
+        
       }
     } catch (error) {
       console.log(error);
@@ -432,7 +447,8 @@ module.exports = {
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let orders = await productHelper.getOrderDetails(req.session.user._id);
       let orderCount = await userHelper.getOrderCount(req.session.user._id)
-      res.render("userview/orders", { loggedIn, cartCount, orders, orderCount });
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+      res.render("userview/orders", { loggedIn, cartCount, orders, orderCount ,wishlistCount});
     } catch (error) {
       console.log(error);
       res.render("error", { message: 'An Error Occured' })
@@ -445,11 +461,13 @@ module.exports = {
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let products = await productHelper.orderProductDetail(req.params.id);
       let order = await productHelper.findOrder(req.params.id);
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
       res.render("userview/orderedProduct", {
         loggedIn,
         cartCount,
         products,
         order,
+        wishlistCount
       });
     } catch (error) {
       console.log(error);
@@ -474,12 +492,15 @@ module.exports = {
       let totalAmount = await userHelper.totalAmount(orderId)
       let userId = req.session.user._id
       let paymentMethod = await userHelper.getPaymentMethod(orderId)
+      let orders = await productHelper.findOrder(orderId)
       if (paymentMethod == 'Razorpay' || paymentMethod == 'Wallet') {
         userHelper.toWallet(userId, totalAmount)
         await productHelper.cancelOrder(orderId);
+        await userHelper.incStock(orders[0].products)
         res.redirect("/orders");
       } else {
         await productHelper.cancelOrder(orderId);
+        await userHelper.incStock(orders[0].products)
         res.redirect("/orders");
       }
     } catch (err) {
@@ -509,8 +530,23 @@ module.exports = {
     try {
       let loggedIn = req.session.user;
       let cartCount = await userHelper.getCartCount(req.session.user._id);
-      res.render('userview/wishlist', { loggedIn, cartCount })
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+      let products = await userHelper.getWishlistPro(req.session.user._id)
+      res.render('userview/wishlist', { loggedIn, cartCount ,products, wishlistCount})
     } catch (err) {
+      console.log(err);
+      res.render("error", { message: 'An Error Occured' })
+    }
+  },
+
+  removeWishlist: async(req,res)=>{
+    try {
+      let userId = req.session.user._id
+      let proId = req.params.id
+      await userHelper.removeWishlistProduct(userId,proId).then(()=>{
+        res.redirect('/wishlist')
+      })
+    } catch (error) {
       console.log(err);
       res.render("error", { message: 'An Error Occured' })
     }

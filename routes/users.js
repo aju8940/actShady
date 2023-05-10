@@ -73,6 +73,8 @@ router.get('/wishlist',middlewares.verifyLogin,usercontroller.getWishlist)
 
 router.get('/add-to-wishlist/:id',middlewares.verifyLogin,usercontroller.addToWishlist)
 
+router.get('/remove-wishlist/:id',middlewares.verifyLogin,usercontroller.removeWishlist)
+
 router.post('/apply-coupon',middlewares.verifyLogin,usercontroller.applyCoupon)
 
 module.exports = router;

@@ -41,17 +41,18 @@ module.exports = {
 
     },
 
-    adminLoginPost: (req, res) => {
+    adminLoginPost: async(req, res) => {
         try {
-            adminHelpers.adminLogin(req.body).then((response) => {
+            let response = await adminHelpers.adminLogin(req.body)
                 if (response.status) {
                     req.session.admin = true
                     req.session.admin = response.admin
                     res.redirect('/admin')
                 } else {
+                    errMsg = response.message
                     res.redirect('/admin')
                 }
-            })
+            
         } catch (error) {
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
@@ -352,7 +353,9 @@ module.exports = {
             let orderId = req.params.id
             let totalAmount = await userHelpers.totalAmount(orderId)
             let userId = await userHelpers.orderUser(orderId)
+            let orders = await productHelpers.findOrder(orderId)
             await productHelpers.returnConfirm(orderId).then(() => {
+                userHelpers.incStock(orders[0].products)
                 userHelpers.toWallet(userId,totalAmount).then(()=>{
                     res.redirect('/admin/order-details')
                 })

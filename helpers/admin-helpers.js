@@ -20,12 +20,12 @@ module.exports={
                     }
                     else{
                         console.log('admin login error');
-                        res({status:false})
+                        res({status:false, message:"Invalid Email Or Password"})
                     }
                 })
             }else{
                 console.log('no admin available');
-                res({status:false})
+                res({status:false , message:"Invalid Email Or Password"})
             }
         })
     },

@@ -57,13 +57,13 @@
               <td><%= cat.category%></td>
 
               <td class="text-end">
-                <button  class="btn rounded font-sm" onclick="editCategory('<%= cat._id%>');event.preventDefault()">Edit</button>
+                <button  class="btn btn-dark btn-sm" style="border-radius: 1rem;" onclick="editCategory('<%= cat._id%>');event.preventDefault()">Edit</button>
 
                 <% if ( cat.status ) { %>
 
                 <a
                   href="#"
-                  class="btn btn-danger rounded font-sm"
+                  class="btn btn-danger  btn-sm" style="width: 60px; border-radius: 1rem;"
                   onclick="unlistCategory('<%=cat._id%>'); event.preventDefault();"
                   >Unlist</a
                 >
@@ -72,7 +72,7 @@
 
                   <a
                   href="#"
-                  class="btn btn-dark rounded font-sm"
+                  class="btn btn-success btn-sm" style="width: 60px;border-radius: 1rem;"
                   onclick="listCategory('<%=cat._id%>'); event.preventDefault();"
                   >List</a
                 >

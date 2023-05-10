@@ -12,11 +12,12 @@
 						<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
 
 						<div class="slick3 gallery-lb">
-							<div class="item-slick3 "  data-thumb="<%=product.image[0]%>">
+							<div class="item-slick3 " data-thumb="<%=product.image[0]%>">
 								<div class="wrap-pic-w pos-relative">
-									<img src="<%=product.image[0]%>" class="soom"  alt="IMG-PRODUCT">
+									<img src="<%=product.image[0]%>" class="soom" alt="IMG-PRODUCT">
 
-									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 " href="<%=product.image[0]%>">
+									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 "
+										href="<%=product.image[0]%>">
 										<i class="fa fa-expand"></i>
 									</a>
 								</div>
@@ -24,9 +25,10 @@
 
 							<div class="item-slick3 " data-thumb="<%=product.image[1]%>">
 								<div class="wrap-pic-w pos-relative">
-									<img src="<%=product.image[1]%>" class="soom"  alt="IMG-PRODUCT">
+									<img src="<%=product.image[1]%>" class="soom" alt="IMG-PRODUCT">
 
-									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 " href="<%=product.image[1]%>">
+									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 "
+										href="<%=product.image[1]%>">
 										<i class="fa fa-expand"></i>
 									</a>
 								</div>
@@ -36,7 +38,8 @@
 								<div class="wrap-pic-w pos-relative ">
 									<img src="<%=product.image[2]%>" class="soom" alt="IMG-PRODUCT">
 
-									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 " href="<%=product.image[2]%>">
+									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 "
+										href="<%=product.image[2]%>">
 										<i class="fa fa-expand"></i>
 									</a>
 								</div>
@@ -46,7 +49,8 @@
 								<div class="wrap-pic-w pos-relative ">
 									<img src="<%=product.image[3]%>" class="soom" alt="IMG-PRODUCT">
 
-									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 " href="<%=product.image[3]%>">
+									<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04 "
+										href="<%=product.image[3]%>">
 										<i class="fa fa-expand"></i>
 									</a>
 								</div>
@@ -55,7 +59,7 @@
 					</div>
 				</div>
 			</div>
-				
+
 			<div class="col-md-6 ml-5 col-lg-5 p-b-30">
 				<div class="p-r-50 p-t-5 p-lr-0-lg">
 					<h4 class="mtext-105 cl2 js-name-detail p-b-14">
@@ -69,23 +73,59 @@
 					<p class="stext-102 cl3 p-t-23">
 						<%=product.description%>
 					</p>
-					
-					
-								<!-- <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail" href="/add-to-cart/<%=product._id%>">
-									Add to cart
-								</button> -->
-								<a href="/add-to-cart/<%=product._id%>" class=" mt-4 flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">Add to cart</a>
-							</div>
-						</div>	
-					</div>
 
-					
+					<% if(product.stock==0) {%>
+						<p class="text-danger mt-3">Out of stock</p>
+						<div class="flex-c-m flex-w w-full p-t-45">
+
+							<button class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04 disabled"
+								onclick="outOfStock()">
+								Add to cart
+							</button>
+
+							<a href="/add-to-wishlist/<%=product._id%>"
+								class="ml-4 flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04"
+								>
+								Add to wishlist
+							</a>
+						</div>
+
+						<% } else { %>
+							<div class="flex-c-m flex-w w-full p-t-45">
+								<a href="/add-to-cart/<%=product._id%>"
+									class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+									Add to cart
+								</a>
+								<a href="/add-to-wishlist/<%=product._id%>"
+									class="ml-4 flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+									Add to wishlist
+								</a>
+							</div>
+							<% } %>
+
 				</div>
 			</div>
 		</div>
 
-		
+
+	</div>
+	</div>
 	</div>
 
 
-	
+	</div>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+	<script>
+		function outOfStock() {
+
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Out Of Stock'
+			})
+		}
+
+	</script>

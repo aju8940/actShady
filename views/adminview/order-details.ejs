@@ -60,7 +60,7 @@
                 <% if (order.orderstatus==="placed" ) { %>
 
                   <td class="dropdown">
-                    <a class="text-primary" onclick="shipOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;"
+                    <a class="btn btn-dark btn-sm " onclick="shipOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;width: 80px;"
                       type="button">
                       Ship
                     </a>
@@ -69,7 +69,7 @@
                   <% } else if (order.orderstatus==="shipped" ) { %>
 
                     <td class="dropdown">
-                      <a class=" text-success" onclick="deliverOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;"
+                      <a class="btn btn-success btn-sm" onclick="deliverOrder('<%=order._id%>'); event.preventDefault();" style="border-radius: 1rem ;width: 80px;"
                         type="button">
                         Deliver
                       </a>
@@ -87,8 +87,8 @@
                       <% } else if (order.orderstatus==="return pending" ) { %>
 
                         <td class="dropdown">
-                          <a class=" text-danger" onclick="returnOrder('<%=order._id%>'); event.preventDefault();"
-                            style="border-radius: 1rem ;" type="button">
+                          <a class="btn btn-danger btn-sm" onclick="returnOrder('<%=order._id%>'); event.preventDefault();"
+                            style="border-radius: 1rem ;width: 80px;" type="button">
                             Return
                           </a>
                         </td>
