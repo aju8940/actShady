@@ -10,10 +10,7 @@ router.get('/',admincontroller.adminPage)
 
 router.route('/login')
 .get(middlewares.verifyAdminLogin,admincontroller.adminLogin)
-
-router.post('/login',(req,res)=>{
-    res.render('adminview/index',{layout: "adminlayout"})
-})
+.post(admincontroller.adminLoginPost)
 
 router.route('/add-product')
 .get(middlewares.verifyAdminLogin,admincontroller.addProduct)
