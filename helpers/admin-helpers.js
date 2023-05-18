@@ -107,7 +107,8 @@ module.exports={
             }
           }
         ]).toArray();
-        return total[0].total
+        console.log(total);
+        return total
       },
 
     

@@ -17,7 +17,11 @@ module.exports = {
             if (req.session.admin) {
                 let order = await productHelpers.getAllOrders()
                 let orderCount = order.length ?? 0
-                let total = await adminHelpers.totalRev() ?? 0
+                console.log(orderCount,'ORDER COUNT');
+                let totalA = await adminHelpers.totalRev()
+                console.log('TOTAL',totalA);
+                let total = totalA[0].total ?? 0
+                console.log("total sasas",total);
                 let products = await productHelpers.productCount() ?? 0
                 res.render('adminview/index', { orderCount, products, total, layout: "adminlayout" })
             } else {
