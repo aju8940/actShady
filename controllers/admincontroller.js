@@ -89,12 +89,10 @@ module.exports = {
 
     },
 
-    categoryList: (req, res) => {
+    categoryList: async(req, res) => {
         try {
-            productHelpers.getAllCategory().then((category) => {
-                console.log('CAAAATTT',category);
+            let category = await productHelpers.getAllCategory()
                 res.render('adminview/category-list', { category, layout: 'adminLayout' })
-            })
         } catch (error) {
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
