@@ -18,7 +18,7 @@ module.exports = {
                 let order = await productHelpers.getAllOrders()
                 let orderCount = order.length ?? 0
                 let totalA = await adminHelpers.totalRev()
-                let total = totalA[0].total ?? 0
+                let total = totalA[0]?.total ?? 0
                 let products = await productHelpers.productCount() ?? 0
                 res.render('adminview/index', { orderCount, products, total, layout: "adminlayout" })
             } else {
