@@ -107,7 +107,7 @@ module.exports={
             }
           }
         ]).toArray();
-        return total[0].total;
+        return total[0].total
       },
 
     
