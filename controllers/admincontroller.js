@@ -92,6 +92,7 @@ module.exports = {
     categoryList: (req, res) => {
         try {
             productHelpers.getAllCategory().then((category) => {
+                console.log('CAAAATTT',category);
                 res.render('adminview/category-list', { category, layout: 'adminLayout' })
             })
         } catch (error) {
@@ -102,8 +103,6 @@ module.exports = {
 
     editCategory: async (req, res) => {
         try {
-            console.log(req.params.id);
-            console.log(req.body);
             await productHelpers.editCategory(req.body, req.params.id);
             res.redirect('/admin/category-list');
         } catch (error) {
