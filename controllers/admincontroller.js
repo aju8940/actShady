@@ -14,15 +14,11 @@ module.exports = {
 
     adminPage: async (req, res) => {
         try {
-            let admin = req.session.admin
             if (req.session.admin) {
                 let order = await productHelpers.getAllOrders()
                 let orderCount = order.length
-                console.log('orderrrrrrrr',orderCount);
                 let total = await adminHelpers.totalRev()
-                console.log('tttttooootal',total);
                 let products = await productHelpers.productCount()
-                console.log('prooooooo',products);
                 res.render('adminview/index', { orderCount, products, total, layout: "adminlayout" })
             } else {
                 res.render('adminview/adminlogin', { layout: "adLoginLayout" })
