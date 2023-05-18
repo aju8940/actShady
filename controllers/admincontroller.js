@@ -92,8 +92,10 @@ module.exports = {
     categoryList: async(req, res) => {
         try {
             let category = await productHelpers.getAllCategory()
+            console.log("category page reached ...")
                 res.render('adminview/category-list', { category, layout: 'adminLayout' })
         } catch (error) {
+            console.log("category page error ...")
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
         }
