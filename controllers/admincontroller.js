@@ -207,9 +207,9 @@ module.exports = {
             const pageSize = parseInt(req.query.pageSize) || 5;
             const skip = (page - 1) * pageSize;
 
-            const products = await productHelpers.findAllProducts(skip, pageSize);
+            const products = await productHelpers.findAllProducts(skip, pageSize)
 
-            const count = await productHelpers.productCount();
+            const count = await productHelpers.productCount()
 
             const totalPages = Math.ceil(count / pageSize);
             const currentPage = page > totalPages ? totalPages : page;
