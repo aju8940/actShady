@@ -9,6 +9,7 @@ module.exports={
 
     addProduct: (productData, callback) => {
         productData.status = true
+        productData.stock = parseInt(productData.stock)
         db.get().collection(collection.PRODUCT).insertOne(productData).then((data) => {
             console.log(data);
             callback(data.insertedId)
@@ -95,15 +96,25 @@ module.exports={
       })
       },
 
-      addCategory: async(category)=>{
-        category.status = true
-        let cat = await db.get().collection(collection.PRODUCT_CATEGORY).insertOne(category)
-        return cat
+      addCategory:  (name) => {
+        return new Promise(async(resolve,reject)=>{
+            let categoryExit = await db.get().collection(collection.PRODUCT_CATEGORY).findOne({
+                category: { $regex: `^${name.category}$`, $options: 'i' }
+              });
+            if(categoryExit){
+                resolve({ status: false, message: "This category is already exist..!" });
+             } else {
+                name.status = true
+                let cat = await db.get().collection(collection.PRODUCT_CATEGORY).insertOne(name)
+              resolve({status:true,cat}) ;
+            }
+        })
+       
       },
 
     getAllCategory : ()=>{
         return new Promise(async(res,rej)=>{
-            let category = await db.get().collection(collection.PRODUCT_CATEGORY).find().toArray()
+            let category = await db.get().collection(collection.PRODUCT_CATEGORY).find({status:true}).toArray()
             res(category)
         })
     },
@@ -267,6 +278,11 @@ module.exports={
         return coupons
     },
 
+    deleteCoupon: async(coupon)=>{
+        let cp = await db.get().collection(collection.COUPONS).deleteOne({_id:ObjectId(coupon)})
+        return cp
+    },
+
     getAllCoupons: async ()=>{
         let allCoupons = await db.get().collection(collection.COUPONS).find().toArray()
         return allCoupons
@@ -331,6 +347,33 @@ module.exports={
     getAllBanners: async ()=>{
         let allBanners = await db.get().collection(collection.BANNERS).find().toArray()
         return allBanners
-    }
+    },
+
+    listBanner: async(banId)=>{
+        let list = await db.get().collection(collection.BANNERS).updateOne({_id:new ObjectId(banId)},{$set:{status:true}})
+        return list
+    },
+
+    unlistBanner: async(banId)=>{
+        let unlist = await db.get().collection(collection.BANNERS).updateOne({_id:new ObjectId(banId)},{$set:{status:false}})
+        return unlist
+    },
+
+    findAllSearchProduct: async (searchkey) => {
+        const product = await db.get().collection(collection.PRODUCT).aggregate([
+            {
+                $match: {
+                    $or: [
+                        { name: { $regex: searchkey, $options: 'i' } },
+                        { category: { $regex: searchkey, $options: 'i' } },
+                    ]
+                }
+
+            }
+        ]).toArray()
+        return product
+        
+
+    },
     
 }

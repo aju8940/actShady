@@ -87,15 +87,29 @@ module.exports={
         return total
     },
 
-    isCategoryExist: async (name) => {
-        let category = await db.get().collection(collection.PRODUCT_CATEGORY).findOne({ category: name });
-        if (category) {
-          console.log('Category Already Exists:', category);
-          return true;
-        } else {
-          console.log('Category does not exist');
-          return false;
-        }
-      }
+    totalRev: async () => {
+        let total = await db.get().collection(collection.ORDERS).aggregate([
+          {
+            $match: {
+              orderstatus: "delivered"
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$totalPrice" }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              total: "$totalAmount"
+            }
+          }
+        ]).toArray();
+        return total[0].total;
+      },
+
+    
     
 }

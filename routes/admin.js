@@ -28,7 +28,7 @@ router.get('/unblock-product/:id',middlewares.verifyAdminLogin,admincontroller.u
 
 router.route('/category-list')
 .get(middlewares.verifyAdminLogin,admincontroller.categoryList)
-.post(admincontroller.addCategoryPost)
+.post(admincontroller.postCategory)
 
 router.post('/edit-category/:id',middlewares.verifyAdminLogin,admincontroller.editCategory)
 
@@ -62,8 +62,14 @@ router.route('/banners')
 .get(middlewares.verifyAdminLogin,admincontroller.getBanners)
 .post(upload.single('image'),admincontroller.addBanner)
 
+router.get('/unlist-banner/:id',middlewares.verifyAdminLogin,admincontroller.unlistBanner)
+
+router.get('/list-banner/:id',middlewares.verifyAdminLogin,admincontroller.listBanner)
+
 router.route('/coupons')
 .get(middlewares.verifyAdminLogin,admincontroller.getCoupons)
 .post(admincontroller.addCouponPost)
+
+router.get('/delete-coupon/:id',middlewares.verifyAdminLogin,admincontroller.deleteCoupon)
 
 module.exports = router;

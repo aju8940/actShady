@@ -18,10 +18,9 @@ module.exports = {
             if (req.session.admin) {
                 let order = await productHelpers.getAllOrders()
                 let orderCount = order.length
-                let total = await adminHelpers.totalAmount()
+                let total = await adminHelpers.totalRev()
                 let products = await productHelpers.productCount()
-                let totalRevenue = total[0].total
-                res.render('adminview/index', { orderCount, products, totalRevenue, layout: "adminlayout" })
+                res.render('adminview/index', { orderCount, products, total, layout: "adminlayout" })
             } else {
                 res.render('adminview/adminlogin', { layout: "adLoginLayout" })
             }
@@ -41,18 +40,18 @@ module.exports = {
 
     },
 
-    adminLoginPost: async(req, res) => {
+    adminLoginPost: async (req, res) => {
         try {
             let response = await adminHelpers.adminLogin(req.body)
-                if (response.status) {
-                    req.session.admin = true
-                    req.session.admin = response.admin
-                    res.redirect('/admin')
-                } else {
-                    errMsg = response.message
-                    res.redirect('/admin')
-                }
-            
+            if (response.status) {
+                req.session.admin = true
+                req.session.admin = response.admin
+                res.redirect('/admin')
+            } else {
+                errMsg = response.message
+                res.redirect('/admin')
+            }
+
         } catch (error) {
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
@@ -74,24 +73,20 @@ module.exports = {
         }
     },
 
-    addCategoryPost: (req, res) => {
+    postCategory: async (req, res) => {
         try {
-            return new Promise(async (resolve, reject) => {
-                let name = req.body.category;
-                let categoryExist = await adminHelpers.isCategoryExist(name);
-                if (categoryExist) {
-                    console.log("Category Exist");
-                    resolve({ status: false, message: 'Category Already Exist' });
+            productHelpers.addCategory(req.body).then((response) => {
+                if (response.status) {
+                    res.json({failed:false})
                 } else {
-                    productHelpers.addCategory(req.body).then(() => {
-                        res.redirect('/admin/category-list')
-                    })
+                    res.json({failed:true})
                 }
-            });
+            })
         } catch (error) {
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
         }
+
     },
 
     categoryList: (req, res) => {
@@ -137,6 +132,26 @@ module.exports = {
         }
     },
 
+    unlistBanner: async (req, res) => {
+        try {
+            await productHelpers.unlistBanner(req.params.id)
+            res.redirect('/admin/banners')
+        } catch (error) {
+            console.log(error);
+            res.render("error", { message: 'An Error Occured' })
+        }
+    },
+
+    listBanner: async (req, res) => {
+        try {
+            await productHelpers.listBanner(req.params.id)
+            res.redirect('/admin/banners')
+        } catch (error) {
+            console.log(error);
+            res.render("error", { message: 'An Error Occured' })
+        }
+    },
+
     addProduct: async (req, res) => {
         try {
             const category = await productHelpers.getAllCategory();
@@ -156,8 +171,8 @@ module.exports = {
                 imgUrl.push(result.url);
 
             }
-            await productHelpers.addProduct(req.body, async (id) => {
-                await productHelpers.addProductImg(id, imgUrl);
+            productHelpers.addProduct(req.body, async (id) => {
+                productHelpers.addProductImg(id, imgUrl);
             });
             res.redirect('/admin/add-product');
         } catch (error) {
@@ -356,7 +371,7 @@ module.exports = {
             let orders = await productHelpers.findOrder(orderId)
             await productHelpers.returnConfirm(orderId).then(() => {
                 userHelpers.incStock(orders[0].products)
-                userHelpers.toWallet(userId,totalAmount).then(()=>{
+                userHelpers.toWallet(userId, totalAmount).then(() => {
                     res.redirect('/admin/order-details')
                 })
             })
@@ -402,11 +417,24 @@ module.exports = {
         }
     },
 
-    getBanners: async(req, res) => {
+    deleteCoupon: (req, res) => {
+        try {
+            console.log(req.params.id, 'iiiiiiiiiiiiiiiiddddddddddddddddddddddddddd');
+            let couponId = req.params.id
+            productHelpers.deleteCoupon(couponId).then(() => {
+                res.redirect('/admin/coupons')
+            })
+        } catch (error) {
+            console.log(error);
+            res.render("error", { message: 'An Error Occured' })
+        }
+    },
+
+    getBanners: async (req, res) => {
         try {
             let banner = await productHelpers.getAllBanners()
             console.log(banner);
-            res.render('adminview/banners', { banner,layout: "adminlayout" })
+            res.render('adminview/banners', { banner, layout: "adminlayout" })
         } catch (err) {
             console.log(err);
             res.render("error", { message: 'An Error Occured' })
@@ -416,10 +444,10 @@ module.exports = {
     addBanner: async (req, res) => {
         try {
             const result = await cloudinary.uploader.upload(req.file.path);
-            await productHelpers.addBanner(req.body).then(async(banner) => {
+            await productHelpers.addBanner(req.body).then(async (banner) => {
                 let id = banner.insertedId
                 let img = result.url
-                await productHelpers.addBannerImg(id,img)
+                await productHelpers.addBannerImg(id, img)
             })
             res.redirect('/admin/banners')
         } catch (error) {

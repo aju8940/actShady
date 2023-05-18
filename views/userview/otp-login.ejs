@@ -116,16 +116,16 @@ function phoneAuth() {
             document.getElementById('verifier').style.display = 'block';
             console.log('OTP Sent');
 
-            var time_limit = 10;
+            var time_limit = 15;
 
               var time_out = setInterval(() => {
 
                 if(time_limit == 0) {
-                 $('#timer').html('<p class="text-primary"> Resend OTP</p>')
+                 $('#timer').html('<a class="text-primary" href="/otplogin"> Resend OTP</a>')
                   
                   
                 } else {
-                  if(time_limit < 10) {
+                  if(time_limit < 15) {
                     time_limit = 0 + '' + time_limit;
                   }
                   $('#timer').html('00:' + time_limit);

@@ -77,4 +77,6 @@ router.get('/remove-wishlist/:id',middlewares.verifyLogin,usercontroller.removeW
 
 router.post('/apply-coupon',middlewares.verifyLogin,usercontroller.applyCoupon)
 
+router.post('/search',usercontroller.postSearch)
+
 module.exports = router;

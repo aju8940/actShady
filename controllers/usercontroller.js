@@ -568,5 +568,32 @@ module.exports = {
       console.log(error);
       res.render("error", { message: 'An Error Occured' })
     }
-  }
+  },
+
+  postSearch: async (req, res) => {
+    var loggedIn = req.session.user
+    var searchkey = req.body.search
+    var products = await productHelper.findAllSearchProduct(searchkey)
+    var categories = await productHelper.getAllCategory()
+    if(loggedIn){
+      let cartCount = await userHelper.getCartCount(req.session.user._id);
+      let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
+      
+      res.render("userview/search-pro", {
+          loggedIn,
+          products,
+          categories,
+          cartCount,
+          wishlistCount
+      });
+    }else{
+      res.render("userview/search-pro", {
+        loggedIn,
+        products,
+        categories
+    });
+    }
+    
+},
+
 }

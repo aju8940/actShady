@@ -86,7 +86,7 @@
                 <td><%=coupon.expiryDate%></td>
                 
                 <td class="">
-                  <a href="#"  class="btn btn-sm btn-danger " style="text-decoration: none;border-radius: 1rem;">Delete</a>
+                  <button onclick="deleteCoupon('<%=coupon._id%>');event.preventDefault()" class="btn btn-sm btn-danger " style="text-decoration: none;border-radius: 1rem;">Delete</button>
                 </td>
               </tr>
 
@@ -119,57 +119,30 @@
   
   <script>
   
-  function blockUser(id, username) {
+  function deleteCoupon(id) {
     Swal.fire({
-      title: "Block User",
-      text: `Do you want to block ${username}?`,
+      title: "Delete Coupon",
+      text: `Do you want to delete this coupon?`,
       showCancelButton: true,
-      confirmButtonText: "Block",
+      confirmButtonText: "Delete",
       cancelButtonText: "Cancel",
       timer: 5000
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: `/admin/block-user/${id}`,
+          url: `/admin/delete-coupon/${id}`,
           method: "get",
           success: (response) => {
+            Swal.fire('Coupon Deleted!', '', 'success')
             location.reload();
-            console.log("User blocked successfully");
+            console.log("Coupon Deleted");
           },
           error: (error) => {
             console.log(`Error: ${error}`);
           },
-        });
+        })
       }
     });
   }
-  
-    function unblockUser(id, username,status) {
-    Swal.fire({
-      title: "Unblock User",
-      text: `Do you want to unblock ${username}?`,
-      showCancelButton: true,
-      confirmButtonText: "Unblock",
-      cancelButtonText: "Cancel",
-      timer: 5000
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: `/admin/unblock-user/${id}`,
-          method: "get",
-          success: (response) => {
-            location.reload();
-            console.log("User Unblocked");
-          },
-          error: (error) => {
-            console.log(`Error: ${error}`);
-          },
-        });
-      }
-    });
-  }
-  
-  
-  
   
   </script>

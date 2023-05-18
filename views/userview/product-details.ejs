@@ -74,6 +74,8 @@
 						<%=product.description%>
 					</p>
 
+					
+
 					<% if(product.stock==0) {%>
 						<p class="text-danger mt-3">Out of stock</p>
 						<div class="flex-c-m flex-w w-full p-t-45">
@@ -91,6 +93,10 @@
 						</div>
 
 						<% } else { %>
+							<h6 class="text-danger">Hurry...!!
+								<br>
+								Only <%=product.stock%> items left
+							</h6>
 							<div class="flex-c-m flex-w w-full p-t-45">
 								<a href="/add-to-cart/<%=product._id%>"
 									class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">

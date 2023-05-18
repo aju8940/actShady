@@ -47,7 +47,7 @@
                                         <td class="column-2">
                                             <%=products[i].product.name%>
                                         </td>
-                                        <td class="column-3">Rs. <%=products[i].product.price%>
+                                        <td class="column-3" id="proPrice">Rs. <%=products[i].product.price%>
                                         </td>
                                         <td class="column-4">
                                             <div class="wrap-num-product flex-w m-l-auto m-r-0">
@@ -67,8 +67,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="column-5" id="<%=products[i].product._id%>">Rs.
-                                            <%=(products[i].product.price*products[i].quantity)%>
+                                        <td class="column-5" id="tot">Rs.
+                                            <%=(products[i].product.price)*(products[i].quantity)%>
                                         </td>
 
                                         <!-- <td class="column-5">Rs. <%=products[i].product.price%></td> -->

@@ -16,19 +16,24 @@
               <div class="mb-4">
                 <label for="product_name" class="form-label">Product Name</label>
                 <input type="text" value="<%= product.name %>" name="name" class="form-control">
+                <span id="name-error" class="validation" style="color: rgb(255, 0, 0)"></span>
               </div>
               <div class="mb-4">
                 <label for="product_category" class="form-label">Category</label>
                 <input type="text" value="<%= product.category %>" name="category" class="form-control">
               </div>
-  
+
               <div class="row">
-                <div class="col-lg-4">
-                  <div class="mb-4">
+                <div class="col-lg-12 d-flex ">
+                  <div class="mb-2 text-center">
                     <label class="form-label">Price</label>
-                    <div class="row gx-2">
-                      <input value="<%= product.price %>" type="text" name="price" class="form-control">
-                    </div>
+                      <input value="<%= product.price %>" type="number" required  name="price" class="form-control">
+                      <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
+                  </div>
+                  <div class="ml-5 text-center">
+                    <label class="form-label">Stock</label>
+                    <input value="<%= product.stock %>" type="number" required name="stock" class="form-control">
+                    <span id="price-error" class="validation" style="color: rgb(255, 0, 0)"></span>
                   </div>
                 </div>
               </div>
@@ -36,6 +41,7 @@
               <div class="mb-4">
                 <label class="form-label">Description</label>
                 <input type="text" value="<%= product.description %>" name="description" class="form-control">
+                <span id="description-error" class="validation" style="color: rgb(255, 0, 0)"></span>
               </div>
   
               <div class="">
@@ -49,17 +55,18 @@
                         style="width: 100px; height: auto"
                       />
                       <%})%>
-                      <input class="form-control" type="file" name="productImage" />
-                      <input class="form-control" type="file" name="productImage" />
-                      <input class="form-control" type="file" name="productImage" />
-                      <input class="form-control" type="file" name="productImage" />
+                      <input class="form-control" required type="file" name="productImage" />
+                      <input class="form-control" required type="file" name="productImage" />
+                      <input class="form-control" required type="file" name="productImage" />
+                      <input class="form-control" required type="file" name="productImage" />
                   </div>
                   
                 </div> 
               </div>
             
+              <span style="color: red;" id="submit-error"></span>
               <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                <input type="submit" value="Save" style="border-radius: 1rem;" class="btn btn-primary btn-lg"
+                <input type="submit" value="Save"  onclick="return validateForm()" style="border-radius: 1rem;" class="btn btn-primary btn-lg"
                 />
               </div>
   
@@ -67,3 +74,55 @@
           </div>
         </div> 
   </section>
+
+
+  
+<script>
+  const nameError = document.getElementById("name-error");
+  const submitError = document.getElementById("submit-error");
+  const descriptionError = document.getElementById("description-error")
+  const priceError = document.getElementById("price-error");
+
+
+  function validateName() {
+    var name = document.getElementById("name").value;
+    if (name.length == 0) {
+      nameError.innerHTML = "Name is required";
+      return false;
+    }
+    nameError.innerHTML = "";
+    return true;
+  }
+
+  function validatePrice(){
+    const priceValue = document.getElementById("price").value;
+    if (priceValue == "") {
+        priceError.innerHTML = "Price is required";
+        return false;
+      }
+      priceError.innerHTML = "";
+      return true;
+  }
+
+  function validateDescription() {
+    var description = document.getElementById("description").value;
+    if (description.length == 0) {
+      description.innerHTML = "Description is required";
+      return false;
+    }
+    descriptionError.innerHTML = "";
+    return true;
+  }
+
+  function validateForm() {
+    if (!validateName() || !validatePrice() || !validateDescription()) {
+      submitError.style.display = "flex";
+      submitError.style.justifyContent = "center";
+      submitError.innerHTML = "Enter valid details";
+      setTimeout(() => {
+        submitError.style.display = "none";
+      }, 3000);
+      return false;
+    }
+  }
+</script>

@@ -59,6 +59,7 @@
                 <th>Image</th>
                 <th>Text</th>
                 <th>Action</th>
+                <th>Status</th>
                 
               </tr>
             </thead>
@@ -69,17 +70,23 @@
                 <td><%=ban.bannername%></td>
                 <td><%=ban.image%></td>
                 <td><%=ban.text%></td>
+
+                <% if ( ban.status == true ) { %>
+                <td class="text-success"><%=ban.status%></td>
+                <% } else { %>
+                  <td class="text-danger"><%=ban.status%></td>
+                  <% } %>
                 <td>
                   
-                  <a  class="  font-sm " href="#">Edit</a>
+                  <a  class="btn btn-dark btn-sm mr-1" style="border-radius: 2rem;" href="#">Edit</a>
 
                   <% if ( ban.status ) { %>
 
-                  <a href="#" class=" text-danger font-sm">Unlist</a>
+                  <a href="#" onclick="unlistBanner('<%=ban._id%>'); event.preventDefault();" class="btn btn-sm btn-danger" style="border-radius: 2rem;">Unlist</a>
 
                   <% } else { %>
 
-                    <a href="#" onclick="listProduct('<%=pro._id%>'); event.preventDefault();" class=" btn-brand rounded font-sm">List</a>
+                    <a href="#" onclick="listBanner('<%=ban._id%>'); event.preventDefault();" class="btn btn-sm btn-success" style="border-radius: 2rem;">List</a>
 
                     <% } %>
 
@@ -93,3 +100,65 @@
       </div>
     </div>
   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready( function () {
+          $('#productsTable').DataTable();
+      } );
+    </script>
+
+    
+    <script>
+
+function unlistBanner(id) {
+    Swal.fire({
+      title: "Unlist Banner",
+      text: `Do you want to unlist this banner?`,
+      showCancelButton: true,
+      confirmButtonText: "Unlist",
+      cancelButtonText: "Cancel",
+      timer: 5000
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `/admin/unlist-banner/${id}`,
+          method: "get",
+          success: (response) => {
+            location.reload();
+            console.log(" Banner Unlisted");
+          },
+          error: (error) => {
+            console.log(`Error: ${error}`);
+          },
+        });
+      }
+    });
+  }
+  
+    function listBanner(id) {
+    Swal.fire({
+      title: "List Banner",
+      text: `Do you want to list this banner?`,
+      showCancelButton: true,
+      confirmButtonText: "List",
+      cancelButtonText: "Cancel",
+      timer: 5000
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: `/admin/list-banner/${id}`,
+          method: "get",
+          success: (response) => {
+            location.reload();
+            console.log("Banner Listed");
+          },
+          error: (error) => {
+            console.log(`Error: ${error}`);
+          },
+        });
+      }
+    });
+  } 
+    </script>
