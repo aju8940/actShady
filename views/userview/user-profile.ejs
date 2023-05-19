@@ -95,26 +95,29 @@
                                 <div class="tab-pane show fade" id="address" role="tabpanel" aria-labelledby="address-tab">
                                     <h5 class="mb-2">Address</h5>
                                     <div class="row">
-                                        <% if ( userAddress ) { %>
+                                        <% if ( userAddress.length == 0 ) { %>
 
-                                            <% userAddress.forEach(user=> { %>
-                                        <div class="col-lg-6 mb-3">
-                                            <div class="card mb-3 mb-lg-0">
-                                                <div class="card-body">
-                                                    <address><%=user.address.name%><br> <%=user.address.phone%>,<br> <%=user.address.housename%>, <br><%=user.address.city%>, <br><%=user.address.district%> ,<br>Pincode : <%=user.address.pincode%></address>
-                                                    <br>
-                                                    <a class="text-primary" href="/edit-address/<%=user.address._id%>">Edit Address</a>
-                                                    <a class=" ml-4 text-danger" href="/delete-address/<%=user.address._id%>">Delete Address</a>
-                                                </div>
-
-                                               
-                                            </div>
-                                        </div>
-
-                                        <% }) %>
-
+                                            <div></div>
+                                            
                                         <% } else { %>
 
+                                            <% userAddress.forEach(user=> { %>
+                                                <div class="col-lg-6 mb-3">
+                                                    <div class="card mb-3 mb-lg-0">
+                                                        <div class="card-body">
+                                                            <address><%=user.address.name%><br> <%=user.address.phone%>,<br> <%=user.address.housename%>, <br><%=user.address.city%>, <br><%=user.address.district%> ,<br>Pincode : <%=user.address.pincode%></address>
+                                                            <br>
+                                                            <a class="text-primary" href="/edit-address/<%=user.address._id%>">Edit Address</a>
+                                                            <a class=" ml-4 text-danger" href="/delete-address/<%=user.address._id%>">Delete Address</a>
+                                                        </div>
+        
+                                                       
+                                                    </div>
+                                                </div>
+        
+                                                <% }) %>
+
+                                                
                                             <% } %>
                                     </div>
                                 </div>
