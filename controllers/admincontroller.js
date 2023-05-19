@@ -216,7 +216,7 @@ module.exports = {
 
             res.render('adminview/product-list', {
                 products,
-                layout: 'adminLayout',
+                layout: 'adminlayout',
                 totalPages,
                 currentPage,
                 pageSize
