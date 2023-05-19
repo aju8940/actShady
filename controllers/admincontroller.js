@@ -94,7 +94,7 @@ module.exports = {
             let category = await productHelpers.getAllCategory()
             console.log("category page reached ...")
             console.log(category);
-            res.render("adminview/category-list", { category })
+            res.render("adminview/category-list", { category, layout: "adminLayout" })
         } catch (error) {
             console.log("category page error ...")
             console.log(error);
