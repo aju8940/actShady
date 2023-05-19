@@ -206,7 +206,6 @@
 								<h5><input type="radio" checked required name="paymentMethod" value="Wallet"
 										disabled class="float-left mr-4 mt-1">Wallet</h5><h6 class="ml-2 pt-1 text-muted">( Balance : Rs <%= wallet %> )</h6>
 							</label>
-							<p class="text-danger">Insufficient balance in your wallet</p>
 	
 							<% } else { %>
 	
@@ -329,18 +328,23 @@
 			method: 'post',
 			success: (response) => {
 				if (response.codSuccess) {
-					Swal.fire(
-						'Order Placed Successfull',
-						'success'
-					)
-					console.log(response);
-					window.location.href = '/orders'
+					Swal.fire({
+					title: 'Order Success',
+					text: 'Your Order Is Successfully Placed.',
+					icon: 'success',
+					confirmButtonText: 'OK'
+				}).then(() => {
+					window.location.href = "/orders";
+				});
 				} else if (response.walletPayment){
-					Swal.fire(
-						'Order Placed Successfull',
-						'success'
-					)
-					window.location.href = '/orders'
+					Swal.fire({
+					title: 'Order Success',
+					text: 'Your Order Is Successfully Placed.',
+					icon: 'success',
+					confirmButtonText: 'OK'
+				}).then(() => {
+					window.location.href = "/orders";
+				});
 				} else {
 					razorpayPayment(response)
 					
@@ -380,23 +384,29 @@
 	}
 
 	function verifyPayment(payment, order) {
-		$.ajax({
-			url: '/verify-payment',
-			data: {
-				payment,
-				order
-			},
-			method: 'post',
-			success: (response) => {
-				if (response.status) {
-					console.log("ORDER SUCCESS");
-					location.href = "/"
-				} else {
-					alert("PAYMENT FAILED")
-				}
+	$.ajax({
+		url: '/verify-payment',
+		data: {
+			payment,
+			order
+		},
+		method: 'post',
+		success: (response) => {
+			if (response.status) {
+				Swal.fire({
+					title: 'Order Success',
+					text: 'Your payment was successfully verified.',
+					icon: 'success',
+					confirmButtonText: 'OK'
+				}).then(() => {
+					window.location.href = "/orders";
+				});
+			} else {
+				alert("PAYMENT FAILED");
 			}
-		})
-	}
+		}
+	});
+}
 
 	function applyCoupon(userId) {
 		let couponCode = document.getElementById('applyCoupon').value
@@ -416,10 +426,7 @@
 					Swal.fire(
 						'Invalid Coupon',
 						'Failed'
-					)
-					
-					console.log(response);
-					
+					)					
 				} else {
 					document.getElementById('totalAmount').innerHTML = response.total
 					Swal.fire(

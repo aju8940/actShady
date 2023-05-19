@@ -4,9 +4,15 @@ const usercontroller= require('../controllers/usercontroller')
 const middlewares = require('../middlewares/middlewares');
 const { route } = require('./admin');
 
-/* GET users listing. */
+// HOME PAGE 
 router.get('/',usercontroller.homepageRender)
 
+router.post('/search',usercontroller.postSearch)
+
+router.get('/shop',usercontroller.viewProducts)
+
+
+// USER DETAILS 
 router.route('/login')
 .get(middlewares.sessionHandle,usercontroller.loginpageRender)
 .post(usercontroller.loginPost)
@@ -29,8 +35,18 @@ router.get('/logout',usercontroller.logOut)
 
 router.get('/user-profile',middlewares.verifyLogin,usercontroller.getProfile)
 
-router.get('/shop',usercontroller.viewProducts)
+router.get('/edit-user/:id',middlewares.verifyLogin,usercontroller.getEditUser)
 
+router.post('/edit-user/:id',middlewares.verifyLogin,usercontroller.editUserPost)
+
+router.post('/add-new-address',middlewares.verifyLogin,usercontroller.addNewAddress);
+
+router.post('/edit-address/:id',middlewares.verifyLogin,usercontroller.editAddressPost)
+
+router.get('/delete-address/:id',middlewares.verifyLogin,usercontroller.deleteAddress)
+
+
+//  PRODUCTS && CART DETAILS
 router.get('/product-details',usercontroller.productDetails)
 
 router.get('/shopping-cart',middlewares.verifyLogin,usercontroller.viewShoppingCart)
@@ -41,11 +57,11 @@ router.post('/change-product-quantity',middlewares.verifyLogin,usercontroller.ch
 
 router.post('/remove-product',middlewares.verifyLogin,usercontroller.removeCartProduct);
 
+
+// PLACE ORDER && ORDERS 
 router.get('/checkout-page',middlewares.verifyLogin,usercontroller.checkOut)
 
 router.post('/add-address',middlewares.verifyLogin,usercontroller.addAddressPost);
-
-router.post('/add-new-address',middlewares.verifyLogin,usercontroller.addNewAddress);
 
 router.post('/place-order',middlewares.verifyLogin,usercontroller.placeOrderPost)
 
@@ -61,22 +77,15 @@ router.post('/verify-payment',middlewares.verifyLogin,usercontroller.razorpayPay
 
 router.get('/edit-address/:id',middlewares.verifyLogin,usercontroller.getEditAddress)
 
-router.post('/edit-address/:id',middlewares.verifyLogin,usercontroller.editAddressPost)
+router.post('/apply-coupon',middlewares.verifyLogin,usercontroller.applyCoupon)
 
-router.get('/delete-address/:id',middlewares.verifyLogin,usercontroller.deleteAddress)
 
-router.get('/edit-user/:id',middlewares.verifyLogin,usercontroller.getEditUser)
-
-router.post('/edit-user/:id',middlewares.verifyLogin,usercontroller.editUserPost)
-
+// WISHLIST DETAILS 
 router.get('/wishlist',middlewares.verifyLogin,usercontroller.getWishlist)
 
 router.get('/add-to-wishlist/:id',middlewares.verifyLogin,usercontroller.addToWishlist)
 
 router.get('/remove-wishlist/:id',middlewares.verifyLogin,usercontroller.removeWishlist)
 
-router.post('/apply-coupon',middlewares.verifyLogin,usercontroller.applyCoupon)
-
-router.post('/search',usercontroller.postSearch)
 
 module.exports = router;

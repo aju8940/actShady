@@ -562,7 +562,7 @@ module.exports = {
 
     },
 
-    verifyPayment: (details) => {
+        verifyPayment: (details) => {
         return new Promise(async(res, rej) => {
             const {
                 createHmac,
@@ -574,7 +574,7 @@ module.exports = {
             if (hmac == details['payment[razorpay_signature]']) {
                 res()
             } else {
-                rej()
+                res()
             }
         })
 
@@ -589,6 +589,20 @@ module.exports = {
             {
                 $set:{
                     status:'placed'
+                }
+            })
+            return result
+    },
+
+    changePaymentStatusFalse: async(orderId)=>{
+        let result = await db.get().collection(collection.ORDERS)
+        .updateOne(
+            {
+                _id:ObjectId(orderId)
+            },
+            {
+                $set:{
+                    status:'payment failed'
                 }
             })
             return result

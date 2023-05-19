@@ -4,102 +4,94 @@
 
 <!-- breadcrumb -->
 <div class="container">
-    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-        <a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
-            Home
-            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-        </a>
+  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+    <a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+      Home
+      <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+    </a>
 
-        <span class="stext-109 cl4">
-            Orders
-            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
-        </span>
-        <span class="stext-109 cl4"> Order Details </span>
-    </div>
+    <span class="stext-109 cl4">
+      Orders
+      <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+    </span>
+    <span class="stext-109 cl4"> Order Details </span>
+  </div>
 </div>
 
-<!-- Shoping Cart -->
-<div class="bg0 p-t-50 p-b-85">
-    <div class="container-fluid">
-        <% order.forEach(order=> { %> <% if (order.orderstatus==="delivered" ) { %>
+<section class="container intro mt-5 mb-5">
+  <div class="gradient-custom-1 h-100">
+    <div class="mask d-flex align-items-center h-100">
+      <div class="container">
+        <% order.forEach(order=> { %> <% if (order.orderstatus==="delivered" ) {
+        %>
+        <button
+          id="download"
+          class="mb-4 btn btn-sm"
+          style="
+            background-color: rgb(157, 49, 102);
+            border-color: rgb(157, 49, 102);
+            color: white;
+          "
+        >
+          Download invoice
+        </button>
 
-                <div>
-                    <button id="download" class="mb-4 btn btn-success" style="
-          margin-left: 250px;
-          background-color: rgb(157, 49, 102);
-          border-color: rgb(157, 49, 102);
-          color: white;
-        ">
-                        Download invoice
-                    </button>
-                </div>
+        <% } else { %> <% } %> <% } ) %>
+        <div class="row justify-content-center" id="container_content">
+          <div class="col-12">
+            <div class="table-responsive bg-white">
+              <table class="table-shopping-cart">
+                <tr class="table_head">
+                  <th class="column-1">Product</th>
+                  <th class="column-2"></th>
+                  <th class="column-4">Quantity</th>
+                  <th class="column-5">Total</th>
+                  <th class="column-6">Delivery Address</th>
+                  <th class="column-7">Status</th>
+                </tr>
 
-                <% } else { %>
-                    <% } %>
-                        <% } )%>
-
-                            <div class="row" id="container_content">
-                                <div class="col-lg-10 col-xl-8 m-lr-auto m-b-50">
-                                    <div class="m-l-25 m-r--38 m-lr-0-xl">
-                                        <div class="wrap-table-shopping-cart">
-                                            <table class="table-shopping-cart">
-                                                <tr class="table_head">
-                                                    <th class="column-1">Product</th>
-                                                    <th class="column-2"></th>
-                                                    <th class="column-4">Quantity</th>
-                                                    <th class="column-5">Total</th>
-                                                    <th class="column-6">Delivery Address</th>
-                                                </tr>
-
-                                                <% for (var i=0; i < products.length; i++ ) { %>
-                                                    <tr class="table_row">
-                                                        <td class="column-1">
-                                                            <div class="how-itemcart1">
-                                                                <img src="<%=products[i].product.image[0]%>"
-                                                                    alt="IMG" />
-                                                            </div>
-                                                        </td>
-                                                        <td class="column-2">
-                                                            <%=products[i].product.name%>
-                                                        </td>
-                                                        <td class="column-4">
-                                                            <%=products[i].quantity%>
-                                                        </td>
-                                                        <td class="column-5">Rs. <%=products[i].product.price%>
-                                                        </td>
-                                                        <% } %>
-                                                            <% order.forEach(order=> { %>
-                                                                <td class="column-6">
-                                                                    <h6>
-                                                                        <%=order.deliveryAddress.name%>,<br />
-                                                                            <%=order.deliveryAddress.address%>,<br />
-                                                                                <%=order.deliveryAddress.city%>,<br />
-                                                                                    <%=order.deliveryAddress.district%>
-                                                                                        ,<br />
-                                                                                        <%=order.deliveryAddress.pincode%>
-                                                                                            ,<br />
-                                                                                            <%=order.deliveryAddress.mobile%>
-                                                                    </h6>
-                                                                </td>
-                                                                <% } )%>
-                                                    </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <% for (var i=0; i < products.length; i++ ) { %>
+                <tr class="table_row">
+                  <td class="column-1">
+                    <div class="how-itemcart1">
+                      <img src="<%=products[i].product.image[0]%>" alt="IMG" />
+                    </div>
+                  </td>
+                  <td class="column-2"><%=products[i].product.name%></td>
+                  <td class="column-4"><%=products[i].quantity%></td>
+                  <td class="column-5">Rs. <%=products[i].product.price%></td>
+                  <% } %> <% order.forEach(order=> { %>
+                  <td class="column-6">
+                    <h6>
+                      <%=order.deliveryAddress.name%>,<br />
+                      <%=order.deliveryAddress.address%> ,<br />
+                      <%=order.deliveryAddress.city%> ,<br />
+                      <%=order.deliveryAddress.district%> ,<br />
+                      <%=order.deliveryAddress.pincode%> ,<br />
+                      <%=order.deliveryAddress.mobile%>
+                    </h6>
+                  </td>
+                  <td><%=order.orderstatus%></td>
+                  <% } )%>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-    window.onload = function () {
-        document.getElementById("download").addEventListener("click", () => {
-            let invoice = this.document.getElementById("container_content");
-            console.log(invoice);
-            console.log(window);
-            html2pdf().from(invoice).save();
-        });
-    };
+  window.onload = function () {
+    document.getElementById("download").addEventListener("click", () => {
+      let invoice = this.document.getElementById("container_content");
+      console.log(invoice);
+      console.log(window);
+      html2pdf().from(invoice).save();
+    });
+  };
 </script>
