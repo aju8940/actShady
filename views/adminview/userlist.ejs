@@ -31,7 +31,7 @@
                 <span class="text-danger">Inactive</span>
                 <% } %>
               </td>
-              <td class="text-end">
+              <td class="">
                 <% if ( user.status ) { %>
                 <a href="#" onclick="blockUser('<%=user._id%>','<%=user.name%>'); event.preventDefault();" class="btn btn-danger btn-sm " style="width: 80px;border-radius: 1rem;">Block</a>
                 <% } else { %>

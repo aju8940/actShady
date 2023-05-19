@@ -174,7 +174,7 @@ module.exports = {
             productHelpers.addProduct(req.body, async (id) => {
                 productHelpers.addProductImg(id, imgUrl);
             });
-            res.redirect('/admin/add-product');
+            res.redirect('/admin/product-list');
         } catch (error) {
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
@@ -447,9 +447,9 @@ module.exports = {
             await productHelpers.addBanner(req.body).then(async (banner) => {
                 let id = banner.insertedId
                 let img = result.url
-                await productHelpers.addBannerImg(id, img)
+                productHelpers.addBannerImg(id, img)
+                res.redirect('/admin/banners')
             })
-            res.redirect('/admin/banners')
         } catch (error) {
             console.log(error);
             res.render("error", { message: 'An Error Occured' })
