@@ -330,7 +330,7 @@ module.exports = {
   checkOut: async (req, res) => {
     try {
       let loggedIn = req.session.user;
-      const userAddress = req.session.user.address;
+      const userAddress = req.session.user.address
       let cartCount = await userHelper.getCartCount(req.session.user._id);
       let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
       let total = await userHelper.getTotalAmount(req.session.user._id);
@@ -385,9 +385,8 @@ module.exports = {
       let addressId = req.params.id
       let userId = req.session.user._id
       let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
-      userHelper.deleteAddress(addressId,userId).then(()=>{
-        res.render('userview/user-profile',{loggedIn,cartCount,wishlistCount})
-      })
+      userHelper.deleteAddress(addressId,userId)
+        res.redirect('/user-profile')
     } catch (error) {
       console.log(error);
       res.render("error", { message: 'An Error Occured' })
