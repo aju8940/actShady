@@ -89,9 +89,10 @@ module.exports = {
         )
     },
 
-    getProducts: () => {
+    getProducts: (skip,pageSize) => {
         return new Promise(async (res, rej) => {
-            let products = await db.get().collection(collection.PRODUCT).find().toArray()
+            let products = await db.get().collection(collection.PRODUCT).find().skip(skip).limit(pageSize).toArray()
+            console.log("PRODUCTS SKIP",products);
             res(products)
         })
     },

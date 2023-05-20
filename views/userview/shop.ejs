@@ -57,7 +57,7 @@
                         </div>
 
                         <ul>
-                            
+
                             <li class="p-b-6">
                                 <a href="#" class="filter-link stext-106 trans-04">
                                     Price: Low to High
@@ -80,12 +80,14 @@
                         <ul>
                             <li class="p-b-6">
                                 <span>min amount</span>
-                                <input class="filter-link stext-106 trans-04" id="minamount" name="minamount" onchange="onchangeHandler(event)" style="border-radius: 2rem;">
+                                <input class="filter-link stext-106 trans-04" id="minamount" name="minamount"
+                                    onchange="onchangeHandler(event)" style="border-radius: 2rem;">
                                 </input>
                             </li>
                             <li class="p-b-6">
                                 <span>max amount</span>
-                                <input class="filter-link stext-106 trans-04" id="maxamount" name="maxamount" onchange="onchangeHandler(event)" style="border-radius: 2rem;">
+                                <input class="filter-link stext-106 trans-04" id="maxamount" name="maxamount"
+                                    onchange="onchangeHandler(event)" style="border-radius: 2rem;">
                                 </input>
                             </li>
                         </ul>
@@ -95,13 +97,14 @@
         </div>
 
 
-      
-        <div class="row isotope-grid" >
+
+        <div class="row isotope-grid">
             <% for (var i=0; i < products.length; i++ ) { %>
                 <% if ( products[i].status ) { %>
-                    <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item product-cards <%=products[i].category%>" data-price="<%=products[i].price%>">
+                    <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item product-cards <%=products[i].category%>"
+                        data-price="<%=products[i].price%>">
                         <!-- Block2 -->
-                        <div class="block2" >
+                        <div class="block2">
                             <div class="block2-pic hov-img0">
                                 <img src="<%=products[i].image[0]%>" alt="IMG-PRODUCT">
 
@@ -122,9 +125,9 @@
                                         Rs.<%=products[i].price%>
                                     </span>
 
-                                    <% if ( products[i].stock == 0 ) { %>
-                                    <p class="text-danger">Out of stock</p>
-                                    <% } %>
+                                    <% if ( products[i].stock==0 ) { %>
+                                        <p class="text-danger">Out of stock</p>
+                                        <% } %>
                                 </div>
 
 
@@ -132,16 +135,31 @@
                         </div>
                     </div>
                     <% } %>
-                    <% } %>
-                </div>
-               
+                        <% } %>
+        </div>
 
-                    <!-- Load more -->
-                    <div class="flex-c-m flex-w w-full p-t-45">
-                        <a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-                            Load More
-                        </a>
-                    </div>
+
+    </div>
+    <div class="pagination-area mt-15 mb-50 ">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <% if (currentPage> 1) { %>
+                    <li class="page-item m-1"><a class="page-link" href="?page=<%=currentPage-1%>"> < Previious <i
+                                class="material-icons md-chevron_left"></i></a></li>
+                    <% } %>
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <li class="m-1 page-item <% if (i === currentPage) { %>active<% } %>"><a class="page-link"
+                                    href="?page=<%=i%>">
+                                    <%=i%>
+                                </a></li>
+                            <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <li class="page-item m-1"><a class="page-link" href="?page=<%=currentPage+1%>">Next ><i
+                                                class="material-icons md-chevron_right"></i></a></li>
+                                    <% } %>
+            </ul>
+        </nav>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
     </div>
 </section>
 

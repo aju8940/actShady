@@ -222,13 +222,20 @@ module.exports = {
     try {
       let loggedIn = req.session.user;
       let categories = await productHelper.getAllCategory()
-      productHelper.getProducts().then(async (products) => {
+      let count = await productHelper.productCount()
+      var page = parseInt(req.query.page) || 1;
+      var pageSize = parseInt(req.query.pageSize) || 4;
+      var skip = (page - 1) * pageSize;
+      const totalPages = Math.ceil(count / pageSize);
+      const currentPage = page > totalPages ? totalPages : page
+
+      productHelper.getProducts(skip,pageSize).then(async (products) => {
         if (req.session.user) {
           let cartCount = await userHelper.getCartCount(req.session.user._id);
           let wishlistCount = await userHelper.getWishlistCount(req.session.user._id);
-          res.render("userview/shop", { loggedIn, products, cartCount, categories, wishlistCount });
+          res.render("userview/shop", { loggedIn, products, cartCount, categories, wishlistCount, totalPages,currentPage, pageSize });
         } else {
-          res.render("userview/shop", { products, categories });
+          res.render("userview/shop", { products, categories , pageSize, totalPages, currentPage});
         }
       });
     } catch (error) {
