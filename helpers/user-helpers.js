@@ -10,8 +10,6 @@ const instance = new Razorpay({
     key_secret: 'O70xedTC2mQjy7VCuXXn7lL3',
 });
 
-
-
 module.exports = {
 
     doSignup: (userData) => {
@@ -327,7 +325,6 @@ module.exports = {
 
     placeOrder: (order, products, grandTotal, payment, coupon, userId, discount) => {
         return new Promise((res, rej) => {
-           
             let orderObj = {
                 deliveryAddress: {
                     name: order.name,
@@ -337,6 +334,7 @@ module.exports = {
                     pincode: order.pincode,
                     mobile: order.phone
                 },
+                orderId: "ODR" + Math.floor(Math.random() * 1000000),
                 userId: ObjectId(userId),
                 paymentmethod: payment,
                 products: products,

@@ -68,7 +68,10 @@
               <% banner.forEach((ban)=> { %>
               <tr>
                 <td><%=ban.bannername%></td>
-                <td><%=ban.image%></td>
+                <td>
+                  <img src="<%=ban.image%>" alt="" srcset="" style="height: 60px; width: 60px;">
+
+                </td>
                 <td><%=ban.text%></td>
 
                 <% if ( ban.status == true ) { %>

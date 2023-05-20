@@ -313,7 +313,7 @@ module.exports = {
     getSalesReport: async (req, res) => {
         try {
             await productHelpers.getAllOrders().then((orders) => {
-                res.render('adminview/sales-report', { layout: "adminlayout", orders })
+                res.render('adminview/sales-report', { layout: "adminlayout",orders })
             })
         } catch (err) {
             console.log(err);

@@ -29,6 +29,7 @@
               <table class="table mb-0">
                 <thead>
                   <tr>
+                    <th scope="col">OrderId</th>
                     <th scope="col">DATE</th>
                     <th scope="col">ADDRESS</th>
                     <th scope="col">AMOUNT</th>
@@ -42,6 +43,7 @@
                   <% orders.forEach(order=> { %>
 
                     <tr>
+                      <th><%=order.orderId%></th>
                       <th><%= new Date(order.date).toLocaleDateString('en-GB', {
                         day: '2-digit',
                         month: '2-digit',
@@ -67,11 +69,14 @@
                       <% if (order.orderstatus==="delivered" ) { %>
 
                         <td><a class="btn-info btn-sm" href="/order-product-detail/<%=order._id%>" style="border-radius: 2rem;">View Product</a>
+
+                          <% if( newDate > order.returnExpiry) { %>
                           <button class="btn-danger btn-sm text-light"
                             onclick="returnOrder('<%=order._id%>'); event.preventDefault();"
                             style="border-radius: 2rem;">Return</button>
                         </td>
-                    
+                    <% } else { %>
+                      <% } %>
 
                     <% } else if (order.orderstatus==="order returned" ) { %>
 
